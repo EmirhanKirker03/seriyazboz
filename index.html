@@ -249,6 +249,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 .dval{font-family:var(--f-num);font-stretch:118%;font-weight:850;font-size:34px;color:var(--brass);min-height:42px;opacity:.35;transition:opacity .25s,transform .25s}
 .dval.in{opacity:1;transform:scale(1.12)}
 .dnote{text-align:center;margin:-4px 0 0;color:var(--muted);font-size:14px;min-height:20px}
+.undotip{display:flex;gap:8px;align-items:flex-start;margin:0;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted);font-size:12.5px;line-height:1.45}
+.undotip b{color:var(--ink);font-weight:700}.undotip span{flex:1;min-width:0}
+.undotip button{border:0;background:none;color:var(--muted);font-size:14px;padding:0 2px}
 .shakebtn{justify-self:center;border:1px dashed rgba(216,178,106,.6);background:transparent;color:var(--brass);border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px}
 .dnote .dbl{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(216,178,106,.15);color:var(--brass);font-weight:700}
 @media (prefers-reduced-motion:reduce){.cube{transition:none}.dthrow.toss{animation:none}}
@@ -726,8 +729,10 @@ function openDice(){
     <p class="dnote" id="dn">${shakeOK()?'Atmak için bas ya da telefonu salla':'Atmak için bas'}</p>
     <button class="btn primary full ib" id="roll">${ICON.dice}<span>Zar at</span></button>
     ${shakeOK()&&needMotionPerm()&&!motionOn?'<button class="shakebtn" id="shk">Sallayarak atmayı aç</button>':''}
+    ${shakeOK()&&isApple()&&!undoTipSeen()?`<p class="undotip" id="utip"><span>Sallayınca "Geri Al" uyarısı çıkarsa: <b>Ayarlar › Erişilebilirlik › Dokunma</b> bölümündeki sallayarak geri alma seçeneğini kapat.</span><button id="utipx" aria-label="Kapat">✕</button></p>`:''}
 `);
   document.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{diceN=+x.dataset.d;openDice()});
+  const ux=$('#utipx');if(ux)ux.onclick=()=>{try{localStorage.setItem(UKEY,'1')}catch(e){}$('#utip').remove()};
   const spin=[[0,0],[0,0]];
   $('#roll').onclick=()=>{
     const btn=$('#roll');if(btn.disabled)return;btn.disabled=true;
@@ -773,8 +778,13 @@ function openDiceTap(){
       motionOn=true; // düğmeyi gösterme; cevap gelince dinleme başlar
     }
   }
+  // iPhone'daki "Geri Al" uyarısı, sayfada yazı yazılan bir kutu odaktayken çıkıyor:
+  // zar penceresi açılırken odaktaki kutuyu bırak, klavye/yazma geçmişi devreye girmesin
+  try{const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur()}catch(e){}
   openDice();
 }
+const UKEY='seri-yazboz-geri-al-ipucu';
+function undoTipSeen(){try{return localStorage.getItem(UKEY)==='1'}catch(e){return false}}
 /* sallama algılama */
 let motionOn=false, shakeH=null, shakeBlock=0;
 function shakeOK(){try{if(window.self!==window.top)return false}catch(e){return false}
