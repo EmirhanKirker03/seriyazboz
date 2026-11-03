@@ -3,50 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Okey (101, 51) ve Pişti için puan tutma uygulaması. Kâğıt kalem gerekmez.">
-<meta name="theme-color" content="#1e5a42">
+<meta name="description" content="Okey (101, 51, Düz), Pişti, Batak ve Blöf için puan tutma uygulaması. Kâğıt kalem gerekmez.">
+<meta name="theme-color" content="#15100c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Seri Yazboz">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif}[hidden]{display:none!important}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif;background:#15100c}[hidden]{display:none!important}</style>
 <title>Seri Yazboz</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Figtree:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: masa keçesi üzerinde taş rengi bir puan kağıdı; altta sabit işlem çubuğu */
+/* Layout: kıraathane masası. Ceviz zemin, oyun başına keçe başlık, pirinç vurgu, fildişi yazı. Tek koyu tema. */
 :root{
-  --bg:#e7ece6; --paper:#fbfaf5; --ink:#1b2420; --muted:#66716a; --line:#d8ddd4;
-  --felt:#1e5a42; --felt-ink:#ffffff;
-  --t-red:#c4352b; --t-blue:#2456a3; --t-black:#1b2420; --t-amber:#b67a06;
-  --pen:#c4352b; --bonus:#1e7a4f; --shade:rgba(15,25,20,.45);
-  --f-num:"Rubik",system-ui,sans-serif; --f-body:"Figtree",system-ui,sans-serif;
+  color-scheme:dark;
+  --bg:#15100c; --paper:#211913; --paper2:#2a2019; --ink:#f1e8d8; --muted:#a8998a; --line:#3b2e24;
+  --felt:#c9a056; --felt-ink:#1b140e; --brass:#d8b26a; --brass-d:#9c7838;
+  --t-red:#e2584a; --t-blue:#6b96e6; --t-black:#e9e0cf; --t-amber:#e3a63a;
+  --pen:#e5614f; --bonus:#6cc793; --shade:rgba(0,0,0,.66);
+  --g101:#123d2e; --g51:#0f3a45; --gpisti:#4b161b; --gbatak:#161e3e; --gduz:#3d2b12; --gblof:#2b1729; --hero-ink:#f6efe2;
+  --f-num:"Archivo",system-ui,sans-serif; --f-body:"Figtree",system-ui,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0e1814; --paper:#17231d; --ink:#e7ede6; --muted:#93a39a; --line:#2a3a32;
-  --felt:#2f8a63; --felt-ink:#ffffff;
-  --t-red:#f0675c; --t-blue:#78a5f2; --t-black:#e7ede6; --t-amber:#e7ad3a;
-  --pen:#f0675c; --bonus:#4cc48b; --shade:rgba(0,0,0,.6); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0e1814; --paper:#17231d; --ink:#e7ede6; --muted:#93a39a; --line:#2a3a32;
-  --felt:#2f8a63; --felt-ink:#ffffff;
-  --t-red:#f0675c; --t-blue:#78a5f2; --t-black:#e7ede6; --t-amber:#e7ad3a;
-  --pen:#f0675c; --bonus:#4cc48b; --shade:rgba(0,0,0,.6); color-scheme:dark}
-
+*,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;-webkit-tap-highlight-color:transparent}
+.card{grid-template-columns:minmax(0,1fr)}
+.names{grid-template-columns:minmax(0,1fr)}.nrow{min-width:0}.nrow input{width:0}
+body{background:radial-gradient(140% 60% at 50% 0%,#241a12 0%,transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-family:var(--f-body);font-size:16px;-webkit-tap-highlight-color:transparent}
 .wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 160px}
 h1{font-family:var(--f-num);font-weight:800;font-size:28px;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .sub{color:var(--muted);margin:4px 0 0}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-offset:2px}
 .btn{border:0;border-radius:12px;padding:14px 16px;font-weight:700;font-size:16px;background:var(--paper);border:1px solid var(--line)}
-.btn.primary{background:var(--felt);color:var(--felt-ink);border-color:var(--felt)}
-.btn.danger{background:var(--pen);color:#fff;border-color:var(--pen)}
+.btn.primary{background:linear-gradient(180deg,#e2c07c,#c49a4e 60%,#a9823f);color:var(--felt-ink);border-color:#e6c888;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 18px -10px rgba(216,178,106,.7)}
+.btn.danger{background:linear-gradient(180deg,#b8402f,#8f2a1e);color:#fbe9e3;border-color:#c85a48;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
 .btn.full{width:100%}
 
 /* kurulum */
@@ -132,11 +126,11 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 .games .gd{color:var(--muted);font-size:14px}
 .tot{position:relative}
 .tot .rk{font-size:11px;font-weight:700;color:var(--muted);min-height:14px}
-.tot.lead{background:color-mix(in srgb,var(--felt) 16%,var(--bg));box-shadow:inset 0 0 0 2px var(--felt)}
-.tot.lead .rk{color:var(--felt)}
+.tot.lead{background:color-mix(in srgb,var(--brass) 12%,var(--bg));box-shadow:inset 0 0 0 1.5px var(--brass)}
+.tot.lead .rk{color:var(--brass)}
 .podium{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .podium li{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:12px;padding:12px 14px}
-.podium li.win{background:var(--felt);color:var(--felt-ink)}
+.podium li.win{background:linear-gradient(180deg,#e2c07c,#b78d46);color:var(--felt-ink)}
 .podium li.win .pn{color:var(--felt-ink)}
 .podium .pl{font-family:var(--f-num);font-weight:800;font-size:22px;width:24px;text-align:center}
 .podium .pn{flex:1;min-width:0;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -151,7 +145,93 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 .install span{flex:1;min-width:0}
 .install button{border:0;background:transparent;font-size:16px;padding:0 4px;color:var(--muted)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media (prefers-reduced-motion:no-preference){.modal{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+
+/* ---- canlı arayüz ---- */
+.hero{--hc:var(--g101);background:radial-gradient(120% 140% at 85% 0%,rgba(255,255,255,.16),transparent 55%),radial-gradient(90% 120% at 0% 100%,rgba(0,0,0,.22),transparent 60%),var(--hc);color:var(--hero-ink);border-bottom:1px solid rgba(216,178,106,.35);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 46px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1.3px),radial-gradient(rgba(0,0,0,.25) 1px,transparent 1.3px);background-size:5px 5px,7px 7px;background-position:0 0,2px 3px;pointer-events:none}
+.hero-in{max-width:560px;margin:0 auto;position:relative;z-index:1}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hero-row .art{width:120px;flex:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-num);font-stretch:120%;font-weight:800;color:var(--brass);font-size:20px;letter-spacing:.01em}
+.brand .logo{width:56px;height:26px}
+.hero-t{font-family:var(--f-num);font-stretch:118%;font-weight:850;letter-spacing:-.005em;font-size:28px;line-height:1.1;margin:14px 0 4px;text-wrap:balance}
+.hero-s{margin:0;opacity:.85;font-size:15px}
+.hero .top .hero-t{margin-top:0}
+.ghost{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(216,178,106,.55);background:rgba(0,0,0,.18);color:var(--brass);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ghost svg{width:16px;height:16px}
+.g-101{--hc:var(--g101)}.g-51{--hc:var(--g51)}.g-pisti{--hc:var(--gpisti)}.g-batak{--hc:var(--gbatak)}.g-duz{--hc:var(--gduz)}.g-blof{--hc:var(--gblof)}
+.lift{position:relative;z-index:2;margin-top:-30px;box-shadow:0 18px 40px -18px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.04)}
+.wrap{padding-top:0}
+.wrap>.install{margin-top:-28px;position:relative;z-index:2}
+.games{grid-template-columns:1fr 1fr;margin-top:-28px;position:relative;z-index:2}
+.wrap>.install + .games{margin-top:14px}
+.games button{position:relative;overflow:hidden;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;gap:6px;padding:16px 14px 10px;border:0;color:#fff;
+  background:radial-gradient(120% 100% at 100% 0%,rgba(255,255,255,.12),transparent 60%),radial-gradient(rgba(255,255,255,.04) 1px,transparent 1.3px) 0 0/5px 5px,var(--hc);box-shadow:0 14px 28px -14px rgba(0,0,0,.8),inset 0 0 0 1px rgba(216,178,106,.38),inset 0 -3px 0 rgba(0,0,0,.25);transition:transform .15s}
+.games button::before{content:"";position:absolute;inset:6px;border-radius:11px;border:1px solid rgba(216,178,106,.16);pointer-events:none}
+.games button:active{transform:translateY(2px) scale(.99)}
+.games .gtxt{display:grid;gap:4px}
+.games .gn{font-size:22px;line-height:1.05;font-stretch:118%;font-weight:850}
+.games .gd{color:rgba(246,239,226,.72);font-size:12.5px;line-height:1.3}
+.games .art{width:100%;max-width:150px;align-self:center;filter:drop-shadow(0 5px 8px rgba(0,0,0,.35))}
+@media (hover:hover){.games button:hover{transform:translateY(-2px)}}
+.histlink{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:14px;color:var(--ink);padding:14px}
+.histlink svg{width:20px;height:20px;color:var(--felt)}
+.histlink b{background:var(--felt);color:var(--felt-ink);border-radius:999px;font-size:12px;padding:2px 8px}
+.pchip{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;padding:4px 8px;border-radius:8px;color:#fff;font-size:13px}
+.p0{background:#b83c30}.p1{background:#3c66b8}.p2{background:#e9e0cf;color:#1b140e}.p3{background:#c18522;color:#1b140e}
+.grid th{border-bottom:1px solid var(--line);padding:12px 3px}
+.grid tbody tr.row:nth-child(even):not(.pen) td{background:color-mix(in srgb,var(--bg) 45%,var(--paper))}
+.btn.ib{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.ib svg{width:18px;height:18px;flex:none}
+
+.dock{border-top-color:rgba(216,178,106,.22);background:color-mix(in srgb,#120d09 86%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.card.lift{margin-top:-30px}
+.hist.lift-list{margin-top:-28px;position:relative;z-index:2}
+.hist button{box-shadow:0 10px 22px -14px rgba(0,0,0,.8)}
+@media (max-width:360px){.games{grid-template-columns:1fr}}
+
+.hbtns{display:flex;gap:8px;align-items:center}
+.ghost{white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--paper2);color:var(--brass);box-shadow:inset 0 0 0 1px rgba(216,178,106,.55)}
+.presets button[aria-pressed="true"]{background:var(--brass);color:var(--felt-ink);border-color:var(--brass)}
+.hero .top>div:first-child{min-width:0}
+.ghost.sq{padding:8px;width:38px;height:38px;justify-content:center}
+.ghost.sq svg{width:20px;height:20px}
+.grid td.neg{color:var(--pen)}
+.note.bidn{color:var(--muted)}
+.pick button .pchip{font-size:15px}
+.pick button[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.stp{display:inline-flex;align-items:center;gap:4px;flex:none}
+.stp button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg);font-family:var(--f-num);font-size:22px;font-weight:700;line-height:1}
+.stp button:active{background:var(--line)}
+.stp b{min-width:34px;text-align:center;font-family:var(--f-num);font-size:22px;font-variant-numeric:tabular-nums}
+.pts{font-family:var(--f-num);font-weight:800;font-size:16px;color:var(--bonus);min-width:38px;text-align:right}
+.pts.neg{color:var(--pen)}
+.label .left{float:right;letter-spacing:0;text-transform:none;font-size:13px}
+.left.ok{color:var(--bonus)}.left.bad{color:var(--pen)}
+.dice{display:flex;justify-content:center;gap:18px;padding:12px 0 4px}
+.die{width:84px;height:84px;border-radius:18px;background:linear-gradient(160deg,#fbf6ea,#e5dcc8);box-shadow:0 6px 0 #b9ab90,0 12px 22px -10px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:12px;gap:2px}
+.die i{display:block;border-radius:50%;margin:auto;width:15px;height:15px}
+.die i.on{background:#1b2420}
+.die.spin{transform:rotate(calc(var(--r,1)*12deg))}
+.die.spin:nth-child(2){transform:rotate(-14deg)}
+@media (prefers-reduced-motion:no-preference){.die.land{animation:land .35s cubic-bezier(.3,1.6,.5,1)}@keyframes land{from{transform:scale(.7) rotate(-20deg)}}}
+.dsum{text-align:center;margin:0;color:var(--muted);font-size:15px}
+.dsum b{font-family:var(--f-num);font-size:34px;color:var(--ink);display:block}
+.whol{display:grid;gap:6px}
+.whol div{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px}
+.whol b{font-family:var(--f-num);font-size:20px}
+.whol div.win{background:linear-gradient(180deg,#e2c07c,#b78d46);color:var(--felt-ink)}
+.prog{height:6px;border-radius:99px;background:rgba(255,255,255,.22);margin-top:10px;overflow:hidden;max-width:220px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#a9823f,#e2c07c);border-radius:inherit}
+.hist .hw{display:flex;align-items:center;gap:8px}.hist .hw svg{width:20px;height:20px;flex:none;color:var(--brass)}
+.tagline{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-family:var(--f-num);font-stretch:125%;font-weight:700;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass)}
+.tagline span{height:1px;width:22px;background:linear-gradient(90deg,transparent,var(--brass))}.tagline span:last-child{transform:scaleX(-1)}
+.pick button small{opacity:.7;font-weight:700;margin-left:2px}
+.negc{color:var(--pen)}
+.whowin{text-align:center;font-size:18px;margin:4px 0 0}
+@media (prefers-reduced-motion:no-preference){.modal:not(.still){animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
 </style>
 
 </head>
@@ -163,9 +243,42 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 const COLORS=['c0','c1','c2','c3'];
 const KEY='okey-puan-v1';
 let S=load()||fresh();
+if(S.limit==null)S.limit=0;
 let showTotals=false;
 if(S.started&&!S.game)S.game='101';
-const GAMES={'101':{n:'101 Okey',d:'Ceza ve baraj ile'},'51':{n:'51 Okey',d:'Ceza ve baraj ile'},'pisti':{n:'Pişti',d:'Sadece el puanları'}};
+const GAMES={
+  '101':{n:'101 Okey',d:'Ceza ve baraj ile · Az puan kazanır',okey:1,low:1,counts:[4]},
+  '51':{n:'51 Okey',d:'Ceza ve baraj ile · Az puan kazanır',okey:1,low:1,counts:[4]},
+  'duz':{n:'Düz Okey',d:'Klasik Okey',okey:0,low:0,counts:[4],start:20},
+  'pisti':{n:'Pişti',d:'El puanları · Çok puan kazanır',okey:0,low:0,counts:[2,4]},
+  'batak':{n:'Batak',d:'El puanları · Batan eksi yazar',okey:0,low:0,counts:[3,4]},
+  'blof':{n:'Blöf',d:'Eli kazanan 1 puan alır',okey:0,low:0,counts:[2,3,4]}};
+const ORDER=['101','51','duz','pisti','batak','blof'];
+/* oyun görselleri: okey taşları ve iskambil kartları */
+const TCOL={r:'#c4352b',b:'#2456a3',k:'#1b2420',y:'#c98a0b'};
+function tileSvg(x,y,num,c,rot=0){return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-15" y="-19" width="30" height="40" rx="5" fill="#cfd6cc"/><rect x="-15" y="-21" width="30" height="40" rx="5" fill="#fbfaf5"/><text x="0" y="1" text-anchor="middle" font-family="Rubik,system-ui,sans-serif" font-weight="800" font-size="17" fill="${TCOL[c]}">${num}</text><circle cx="0" cy="11" r="2.6" fill="${TCOL[c]}"/></g>`}
+function cardSvg(x,y,rank,suit,rot=0){const red=suit==='♥'||suit==='♦';const c=red?'#c4352b':'#1b2420';
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-19" y="-27" width="38" height="54" rx="5" fill="#fbfaf5" stroke="#d8ddd4"/><text x="-13" y="-12" font-family="Rubik,system-ui,sans-serif" font-weight="800" font-size="12" fill="${c}">${rank}</text><text x="0" y="12" text-anchor="middle" font-size="22" fill="${c}">${suit}</text></g>`}
+function backSvg(x,y,rot=0){return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-19" y="-27" width="38" height="54" rx="5" fill="#6e1c23" stroke="#d8b26a" stroke-width="1"/><rect x="-14" y="-22" width="28" height="44" rx="3" fill="none" stroke="#d8b26a" stroke-opacity=".7"/><path d="M0 -14 L9 0 L0 14 L-9 0 Z" fill="none" stroke="#d8b26a" stroke-width="1.4"/><circle cx="0" cy="0" r="2.4" fill="#d8b26a"/></g>`}
+function jokerSvg(x,y,rot=0){return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-15" y="-19" width="30" height="40" rx="5" fill="#cfd6cc"/><rect x="-15" y="-21" width="30" height="40" rx="5" fill="#fbfaf5"/><path d="M0 -12 L3 -4 L11 -3 L5 2 L7 10 L0 6 L-7 10 L-5 2 L-11 -3 L-3 -4 Z" fill="#1d6b4a"/></g>`}
+function art(k){
+  const w=(b)=>`<svg class="art" viewBox="0 0 130 90" aria-hidden="true">${b}</svg>`;
+  if(k==='101')return w(tileSvg(38,48,11,'r',-8)+tileSvg(66,44,12,'r')+tileSvg(94,48,13,'r',8));
+  if(k==='51')return w(tileSvg(30,50,7,'r',-10)+tileSvg(54,45,7,'b',-3)+tileSvg(78,45,7,'k',3)+tileSvg(102,50,7,'y',10));
+  if(k==='duz')return w(tileSvg(40,48,9,'k',-8)+jokerSvg(66,44)+tileSvg(92,48,9,'r',8));
+  if(k==='blof')return w(backSvg(42,50,-18)+backSvg(58,46,-6)+backSvg(74,46,6)+cardSvg(90,50,'A','♥',18));
+  if(k==='pisti')return w(cardSvg(52,48,'7','♥',-12)+cardSvg(60,46,'10','♦',-2)+cardSvg(80,44,'J','♣',14));
+  return w(cardSvg(40,52,'J','♠',-24)+cardSvg(56,46,'Q','♠',-8)+cardSvg(74,46,'K','♠',8)+cardSvg(90,52,'A','♠',24));
+}
+const ICON={
+  dice:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="8.5" cy="8.5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.6" fill="currentColor"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>',
+  flag:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4m0 0h10l-2 4 2 4H6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>',
+  eyeoff:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6C3.7 8.5 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.4 4.5-1.1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>',
+  trophy:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 13v4M8 21h8M9 17h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>'};
+const LOGO=`<svg class="logo" viewBox="0 0 66 30" aria-hidden="true">${[0,1,2].map(i=>`<g transform="translate(${i*22} 0)"><rect x="1" y="3" width="19" height="26" rx="4" fill="rgba(0,0,0,.22)"/><rect x="1" y="1" width="19" height="26" rx="4" fill="#fbfaf5"/><text x="10.5" y="17" text-anchor="middle" font-family="Rubik,system-ui,sans-serif" font-weight="800" font-size="12" fill="#c4352b">${i+3}</text><circle cx="10.5" cy="22" r="1.7" fill="#c4352b"/></g>`).join('')}</svg>`;
 
 function fresh(){return{started:false,mode:'tekli',names:['','','',''],entries:[]}}
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch(e){return null}}
@@ -173,19 +286,19 @@ const HKEY='seri-yazboz-gecmis';
 function loadH(){try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]}}
 function saveH(h){try{localStorage.setItem(HKEY,JSON.stringify(h.slice(0,200)))}catch(e){}}
 function archive(){if(!S.entries.length)return;const h=loadH();
-  h.unshift({d:Date.now(),game:S.game,mode:S.mode,names:[...S.names],entries:JSON.parse(JSON.stringify(S.entries))});saveH(h)}
+  h.unshift({d:Date.now(),game:S.game,mode:S.mode,limit:S.limit||0,start:S.start||0,names:[...S.names],entries:JSON.parse(JSON.stringify(S.entries))});saveH(h)}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>(n>0?'+':'')+n;
 const $=s=>document.querySelector(s);
 const P=()=>S.names.length;
 const IDX=()=>[...Array(P()).keys()];
-const lowWins=(g=S.game)=>g!=='pisti';
+const lowWins=(g=S.game)=>!!(GAMES[g]&&GAMES[g].low);
 function ranks(arr,g){const lw=lowWins(g);const o=arr.map((v,i)=>({v,i})).sort((a,b)=>lw?a.v-b.v:b.v-a.v);
   const r=[];o.forEach((x,k)=>{r[x.i]=(k&&x.v===o[k-1].v)?r[o[k-1].i]:k+1});return {order:o,r}}
 
-function totals(names=S.names,entries=S.entries){
-  const t=Array(names.length).fill(0);
+function totals(names=S.names,entries=S.entries,start=(S.start||0)){
+  const t=Array(names.length).fill(start);
   for(const e of entries){ if(e.t==='r') e.v.forEach((x,i)=>t[i]+=x); else t[e.p]+=e.v; }
   return t;
 }
@@ -200,29 +313,36 @@ function showInstall(){
   let seen=false;try{seen=localStorage.getItem('seri-yazboz-ipucu')==='1'}catch(e){}
   return mobile&&!standalone&&!seen;
 }
+function fitNames(){const c=GAMES[S.game].counts;let n=P();if(!c.includes(n))n=c[c.length-1];
+  S.names=[...S.names,'','','',''].slice(0,n);if(n!==4)S.mode='tekli'}
 function renderPick(){
-  $('#app').innerHTML=`<div class="wrap">
-    <h1>Seri Yazboz</h1>
-    <p class="sub">Hangi oyunu oynuyorsunuz?</p>
+  const hc=loadH().length;
+  $('#app').innerHTML=`<header class="hero"><div class="hero-in">
+      <div class="brand">${LOGO}<span>Seri Yazboz</span></div>
+      <p class="hero-t">Hangi oyunu oynuyorsunuz?</p>
+      <p class="hero-s">Kâğıt kalem gerekmez. Puanları yaz, toplamı uygulama yapsın.</p>
+      <p class="tagline"><span></span>Yeni nesil yazboz<span></span></p>
+    </div></header>
+    <div class="wrap">
     ${showInstall()?`<div class="install" id="inst"><span>Kayıtların kaybolmasın diye <b>Paylaş → Ana Ekrana Ekle</b> ile uygulamayı ana ekrana ekle.</span><button id="instx" aria-label="Kapat">✕</button></div>`:''}
-    <div class="games">${['101','51','pisti'].map(k=>[k,GAMES[k]]).map(([k,g])=>`<button data-g="${k}"><span class="gn">${g.n}</span><span class="gd">${g.d}</span></button>`).join('')}</div>
-    <button class="histlink" id="hist">Geçmiş oyunlar${loadH().length?' ('+loadH().length+')':''}</button></div>`;
+    <div class="games">${ORDER.map(k=>`<button data-g="${k}" class="g-${k}">
+      <span class="gtxt"><span class="gn">${GAMES[k].n}</span><span class="gd">${GAMES[k].d}</span></span>${art(k)}</button>`).join('')}</div>
+    <button class="histlink" id="hist">${ICON.clock}<span>Geçmiş oyunlar</span>${hc?`<b>${hc}</b>`:''}</button></div>`;
   $('#hist').onclick=renderHistory;
   if($('#instx'))$('#instx').onclick=()=>{try{localStorage.setItem('seri-yazboz-ipucu','1')}catch(e){}$('#inst').remove()};
-  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.game=b.dataset.g;if(S.game!=='pisti')S.names=[...S.names,'','',''].slice(0,4);if(S.game!=='pisti'&&S.mode!=='esli')S.mode='tekli';save();renderSetup()});
+  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.game=b.dataset.g;if(S.mode!=='esli')S.mode='tekli';fitNames();save();renderSetup()});
 }
 function renderSetup(){
   if(!S.game)return renderPick();
-  $('#app').innerHTML=`<div class="wrap">
-    <button class="icon-btn" id="back">← Oyun değiştir</button>
-    <h1 style="margin-top:14px">${GAMES[S.game].n}</h1>
-    <p class="sub">Oyuncuların adını yaz, başlayalım.</p>
-    <div class="card">
-      ${S.game==='pisti'?`<div class="label">Kaç kişi?</div>
-      <div class="seg" role="group">
-        <button id="c2" aria-pressed="${P()===2}">2 kişi</button>
-        <button id="c4" aria-pressed="${P()===4}">4 kişi</button>
-      </div>`:''}
+  const G=GAMES[S.game];
+  $('#app').innerHTML=`<header class="hero g-${S.game}"><div class="hero-in hero-row">
+      <div><button class="ghost" id="back">← Oyun değiştir</button>
+      <p class="hero-t">${G.n}</p><p class="hero-s">Oyuncuların adını yaz, başlayalım.</p></div>${art(S.game)}
+    </div></header>
+    <div class="wrap">
+    <div class="card lift">
+      ${G.counts.length>1?`<div class="label">Kaç kişi?</div>
+      <div class="seg" role="group">${G.counts.map(c=>`<button data-c="${c}" aria-pressed="${P()===c}">${c} kişi</button>`).join('')}</div>`:''}
       ${P()===4?`<div class="label">Oyun tipi</div>
       <div class="seg" role="group">
         <button id="m-tekli" aria-pressed="${S.mode==='tekli'}">Tekli</button>
@@ -234,19 +354,30 @@ function renderSetup(){
           <input id="n${i}" value="${esc(n)}" placeholder="${i+1}. oyuncunun adı" maxlength="14" autocomplete="off"></label>`).join('')}
       </div>
       ${S.mode==='esli'&&P()===4?`<p class="hint">Karşılıklı oturanlar eş olur: <b>1 ve 3</b> bir takım, <b>2 ve 4</b> bir takım.</p>`:''}
+      ${G.start?`<div class="label">Başlangıç puanı</div>
+      <div class="prow"><span class="pn">Herkes kaç puanla başlasın?</span>${stepper('st',S.start||G.start)}</div>`:''}
+      <div class="label">Kaç tur oynanacak?</div>
+      <div class="seg" role="group"><button id="l0" aria-pressed="${!S.limit}">Sınırsız</button><button id="l1" aria-pressed="${!!S.limit}">Tur sayısı belirle</button></div>
+      ${S.limit?`<div class="prow"><span class="pn">Tur sayısı</span>${stepper('lim',S.limit)}</div>
+      <div class="presets">${[5,7,9,11].map(n=>`<button data-l="${n}" aria-pressed="${S.limit===n}">${n} tur</button>`).join('')}</div>`:''}
       <p class="err" id="err" hidden></p>
       <button class="btn primary full" id="start">Oyunu başlat</button>
     </div></div>`;
   const keep=()=>S.names=S.names.map((_,i)=>$('#n'+i).value);
-  $('#back').onclick=()=>{keep();if(S.game!=='pisti')S.names=[...S.names,'','',''].slice(0,4);S.game=null;save();renderPick()};
-  const setN=n=>{keep();S.names=[...S.names,'','',''].slice(0,n);if(n===2)S.mode='tekli';renderSetup()};
-  if($('#c2')){$('#c2').onclick=()=>setN(2);$('#c4').onclick=()=>setN(4)}
+  $('#back').onclick=()=>{keep();S.game=null;save();renderPick()};
+  const setN=n=>{keep();S.names=[...S.names,'','','',''].slice(0,n);if(n!==4)S.mode='tekli';renderSetup()};
+  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>setN(+b.dataset.c));
   if($('#m-tekli')){$('#m-tekli').onclick=()=>{keep();S.mode='tekli';renderSetup()};
   $('#m-esli').onclick=()=>{keep();S.mode='esli';renderSetup()}}
+  if($('#st-m')){const cur=()=>S.start||G.start;$('#st-m').onclick=()=>{keep();S.start=Math.max(2,cur()-2);renderSetup()};$('#st-p').onclick=()=>{keep();S.start=Math.min(100,cur()+2);renderSetup()}}
+  $('#l0').onclick=()=>{keep();S.limit=0;renderSetup()};
+  $('#l1').onclick=()=>{keep();if(!S.limit)S.limit=11;renderSetup()};
+  if($('#lim-m')){$('#lim-m').onclick=()=>{keep();S.limit=Math.max(1,S.limit-1);renderSetup()};$('#lim-p').onclick=()=>{keep();S.limit=Math.min(99,S.limit+1);renderSetup()}}
+  document.querySelectorAll('[data-l]').forEach(x=>x.onclick=()=>{keep();S.limit=+x.dataset.l;renderSetup()});
   $('#start').onclick=()=>{
     keep(); const n=S.names.map(x=>x.trim());
     if(n.some(x=>!x)){const e=$('#err');e.textContent='Tüm oyuncuların adını yaz.';e.hidden=false;return}
-    S.names=n;S.started=true;S.entries=[];save();render();
+    S.names=n;S.start=G.start?(S.start||G.start):0;S.started=true;S.entries=[];save();render();
   };
 }
 
@@ -255,7 +386,7 @@ function renderGame(){
   let round=0, rows='';
   S.entries.forEach((e,idx)=>{
     if(e.t==='r'){round++;
-      rows+=`<tr class="row" data-i="${idx}"><td>${round}</td>${e.v.map(x=>`<td>${x}</td>`).join('')}</tr>`;
+      rows+=`<tr class="row" data-i="${idx}"><td>${round}</td>${e.v.map((x,i)=>`<td${x<0?' class="neg"':''}>${x}${e.bt&&e.bt.b===i?`<span class="note bidn">${e.bt.bid} dedi</span>`:''}${e.dz&&e.dz.f===i?`<span class="note bidn">${DZ[e.dz.how].s}</span>`:''}${e.dz&&e.dz.gs===i?`<span class="note bidn">gösterge</span>`:''}</td>`).join('')}</tr>`;
     }else{
       const cells=IDX().map(i=>i===e.p
         ?`<td><span class="${e.v>0?'v-pen':'v-bon'}">${fmt(e.v)}</span>${e.note?`<span class="note">${esc(e.note)}</span>`:''}</td>`:'<td></td>').join('');
@@ -263,12 +394,15 @@ function renderGame(){
     }
   });
   const t=totals(), rk=ranks(t);/*live*/
-  $('#app').innerHTML=`<div class="wrap">
-    <div class="top"><div><h1>${GAMES[S.game].n}</h1>
-      <p class="sub">${S.mode==='esli'?'Eşli':'Tekli'} · ${round} tur oynandı</p></div>
-      <button class="icon-btn" id="newgame">Oyunu bitir</button></div>
-    <div class="sheet">
-      <table class="grid"><thead><tr><th>Tur</th>${S.names.map((n,i)=>`<th class="${COLORS[i]}">${esc(n)}</th>`).join('')}</tr></thead>
+  const lead=S.entries.length?S.names.filter((_,i)=>rk.r[i]===1).join(', '):'';
+  $('#app').innerHTML=`<header class="hero g-${S.game}"><div class="hero-in">
+      <div class="top"><div><p class="hero-t">${GAMES[S.game].n}</p>
+      <p class="hero-s">${S.mode==='esli'?'Eşli':'Tekli'} · ${round}${S.limit?' / '+S.limit:''} tur${lead&&showTotals?` · Önde: ${esc(lead)}`:''}</p>${S.limit?`<div class="prog"><i style="width:${Math.min(100,round/S.limit*100)}%"></i></div>`:''}</div>
+      <div class="hbtns"><button class="ghost sq" id="dice" aria-label="Zar at">${ICON.dice}</button><button class="ghost" id="newgame">${ICON.flag}<span>Oyunu bitir</span></button></div></div>
+    </div></header>
+    <div class="wrap">
+    <div class="sheet lift">
+      <table class="grid"><thead><tr><th>Tur</th>${S.names.map((n,i)=>`<th><span class="pchip p${i}">${esc(n)}</span></th>`).join('')}</tr></thead>
       <tbody>${rows}</tbody></table>
       ${S.entries.length?'':`<div class="empty"><b>Henüz tur yok</b>İlk el bitince aşağıdaki <b style="display:inline">Tur ekle</b> ile puanları gir.</div>`}
     </div>
@@ -279,22 +413,25 @@ function renderGame(){
       ${S.mode==='esli'?`<div class="teams" style="margin-bottom:6px">${TEAMS.map(([a,b])=>`<div class="team"><div class="n">${esc(S.names[a])} + ${esc(S.names[b])}</div><div class="s">${t[a]+t[b]}</div></div>`).join('')}</div>`:''}
       <div class="totals" style="grid-template-columns:repeat(${P()},1fr)">${S.names.map((n,i)=>`<div class="tot${rk.r[i]===1&&S.entries.length?' lead':''}"><div class="n ${COLORS[i]}">${esc(n)}</div><div class="s">${t[i]}</div><div class="rk">${S.entries.length?rk.r[i]+'.':''}</div></div>`).join('')}</div>
     </div>
-    <div class="actions${S.game==='pisti'?' two-col':''}">
-      <button class="btn primary" id="addr">Tur ekle</button>
-      ${S.game==='pisti'?'':'<button class="btn" id="addp">Ceza / Baraj</button>'}
-      <button class="btn" id="tog" aria-pressed="${showTotals}">${showTotals?'Gizle':'Toplam'}</button>
+    <div class="actions${GAMES[S.game].okey?'':' two-col'}">
+      <button class="btn primary ib" id="addr">${ICON.plus}<span>Tur ekle</span></button>
+      ${GAMES[S.game].okey?'<button class="btn" id="addp">Ceza / Baraj</button>':''}
+      <button class="btn ib" id="tog" aria-pressed="${showTotals}">${showTotals?ICON.eyeoff+'<span>Gizle</span>':ICON.eye+'<span>Toplam</span>'}</button>
     </div></div></div>`;
-  $('#addr').onclick=()=>openRound();
+  $('#addr').onclick=()=>({batak:openBatak,duz:openDuz,blof:openBlof}[S.game]||openRound)();
   if($('#addp'))$('#addp').onclick=()=>openPenalty();
   $('#tog').onclick=()=>{showTotals=!showTotals;renderGame()};
-  $('#newgame').onclick=openFinish;
+  $('#newgame').onclick=()=>openFinish(false);
+  $('#dice').onclick=openDice;
   keepAwake();
   document.querySelectorAll('tr.row').forEach(r=>r.onclick=()=>openRow(+r.dataset.i));
 }
 
 /* ---------- PENCERELER ---------- */
-function modal(html){
-  $('#layer').innerHTML=`<div class="overlay" id="ov"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;
+function modal(html,keep){
+  const old=document.querySelector('.modal'),st=keep&&old?old.scrollTop:0;
+  $('#layer').innerHTML=`<div class="overlay" id="ov"><div class="modal${keep&&old?' still':''}" role="dialog" aria-modal="true">${html}</div></div>`;
+  if(st)document.querySelector('.modal').scrollTop=st;
   $('#ov').onclick=e=>{if(e.target.id==='ov')closeM()};
   const c=$('#x'); if(c)c.onclick=closeM;
 }
@@ -328,7 +465,7 @@ function openRound(idx){
     const v=IDX().map(i=>{const r=$('#r'+i).value.replace(/[^0-9]/g,'');const n=r?parseInt(r,10):0;return neg[i]?-n:n});
     if(v.every(x=>x===0)){showErr('En az bir oyuncuya puan yaz.');return}
     if(e)e.v=v; else S.entries.push({t:'r',v});
-    save();closeM();renderGame();
+    save();closeM();renderGame();if(!e)checkLimit();
     if(!e)window.scrollTo({top:document.body.scrollHeight});
   };
 }
@@ -360,10 +497,10 @@ function pickAmount(p,idx){
   if(e)delBtn(idx);
 }
 function showErr(m){const e=$('#err');e.textContent=m;e.hidden=false}
-function openRow(i){S.entries[i].t==='r'?openRound(i):openPenalty(i)}
+function openRow(i){const e=S.entries[i];if(e.t!=='r')return openPenalty(i);(e.bt?openBatak:e.dz?openDuz:e.bl?openBlof:openRound)(i)}
 
 function summary(g){
-  const t=totals(g.names,g.entries);
+  const t=totals(g.names,g.entries,g.start||0);
   const teams=g.mode==='esli'&&g.names.length===4;
   const list=teams?TEAMS.map(([a,b])=>({n:g.names[a]+' + '+g.names[b],v:t[a]+t[b],c:''})):g.names.map((n,i)=>({n,v:t[i],c:COLORS[i]}));
   const rk=ranks(list.map(x=>x.v),g.game);
@@ -378,35 +515,182 @@ function copyBtn(txt){if($('#copy'))$('#copy').onclick=async()=>{const b=$('#cop
   try{await navigator.clipboard.writeText(txt);b.textContent='Kopyalandı ✓'}
   catch(e){b.outerHTML=`<textarea class="copybox" readonly rows="5">${esc(txt)}</textarea>`;const x=document.querySelector('.copybox');x.focus();x.select()}}}
 
-function openFinish(){
+const roundCount=()=>S.entries.filter(e=>e.t==='r').length;
+function checkLimit(){
+  if(S.game==='duz'){const t=totals(),z=S.names.filter((_,i)=>t[i]<=0);if(z.length)return setTimeout(()=>openFinish(true,`${z.join(', ')} puanını bitirdi.`),250)}
+  if(S.limit&&roundCount()===S.limit)setTimeout(()=>openFinish(true),250)}
+function openFinish(done,msg){
   const sm=summary(S);
-  modal(`${head('Sonuç')}
+  modal(`${head(done?'Oyun bitti':'Sonuç')}
+    ${done?`<p class="hint" style="margin:-6px 0 0">${msg||S.limit+' turun hepsi oynandı.'}</p>`:''}
     ${S.entries.length?sm.html+'<button class="btn full" id="copy">Sonucu kopyala</button>':'<p style="margin:0">Henüz puan girilmedi.</p>'}
-    <div class="label" style="margin-top:4px">Yeni oyun</div>
-    ${S.entries.length?'<p class="hint" style="margin:-8px 0 0">Bu oyun geçmişe kaydedilir.</p>':''}
-    <button class="btn primary full" id="same">Aynı oyuncularla başlat</button>
-    <div class="two"><button class="btn" id="diff">Oyuncuları değiştir</button><button class="btn" id="game">Başka oyun</button></div>`);
+    <div class="label" style="margin-top:4px">Ne yapalım?</div>
+    <button class="btn primary full" id="same">Aynı oyuncularla yeni oyun</button>
+    <button class="btn full" id="diff">Oyuncuları değiştir</button>
+    <button class="btn danger full" id="end">Oyunu bitir</button>
+    ${S.entries.length?'<p class="hint" style="text-align:center;margin:-6px 0 0">Oyun geçmişe kaydedilir. Geçmişten istediğin zaman devam edebilirsin.</p>':''}`);
   copyBtn(sm.txt);
   const reset=()=>{archive();S.entries=[];showTotals=false;save();closeM()};
   $('#same').onclick=()=>{reset();renderGame()};
   $('#diff').onclick=()=>{reset();S.started=false;save();render()};
-  $('#game').onclick=()=>{reset();S.started=false;S.game=null;S.names=[...S.names,'','',''].slice(0,4);save();render()};
+  $('#end').onclick=()=>{reset();S.started=false;S.game=null;save();render()};
+}
+
+/* ---------- BATAK İHALE ---------- */
+// Kural: İhaleyi alan dediği kadar ya da fazla el alırsa aldığı el kadar artı yazar,
+// alamazsa dediği sayı kadar eksi yazar (batar). Diğer oyuncular aldıkları el kadar artı yazar.
+function batakScore(bt){return bt.tk.map((t,i)=>i===bt.b?(t>=bt.bid?t:-bt.bid):t)}
+function openBatak(idx){
+  const e=idx!=null?S.entries[idx]:null;
+  const N=P(), TOT=Math.floor(52/N);
+  let b=e&&e.bt?e.bt.b:null, bid=e&&e.bt?e.bt.bid:5, tk=e&&e.bt?[...e.bt.tk]:Array(N).fill(0);
+  const title=e?'Tur '+roundNo(idx)+' düzenle':'Tur '+(S.entries.filter(x=>x.t==='r').length+1);
+  let first=true;
+  const draw=()=>{
+    const left=TOT-tk.reduce((a,c)=>a+c,0);
+    const sc=b!==null?batakScore({b,bid,tk}):null;
+    modal(`${head(title)}
+      <div class="label">İhaleyi kim aldı?</div>
+      <div class="pick">${S.names.map((n,i)=>`<button data-b="${i}" aria-pressed="${b===i}"><span class="pchip p${i}">${esc(n)}</span></button>`).join('')}</div>
+      <div class="prow"><span class="pn">Kaç dedi?</span>${stepper('bid',bid)}</div>
+      <div class="label">Kim kaç el aldı? <span class="left ${left<0?'bad':left===0?'ok':''}">${left===0?'Tamam ✓':left>0?'Kalan '+left+' el':Math.abs(left)+' el fazla'}</span></div>
+      ${S.names.map((n,i)=>`<div class="prow"><span class="pn ${COLORS[i]}">${esc(n)}</span>
+        ${sc?`<span class="pts ${sc[i]<0?'neg':''}">${fmt(sc[i])||0}</span>`:''}${stepper('t'+i,tk[i])}</div>`).join('')}
+      <p class="hint">${b===null?'Önce ihaleyi alanı seç.':`${esc(S.names[b])} ${bid} veya fazla el alırsa aldığı kadar artı, alamazsa −${bid} yazar.`}</p>
+      <p class="err" id="err" hidden></p>
+      <button class="btn primary full" id="ok">Kaydet</button>
+      <button class="btn full" id="manual">Puanları elle gir</button>
+      ${e?'<button class="btn full" id="del" style="color:var(--pen)">Bu turu sil</button>':''}`,!first);first=false;
+    document.querySelectorAll('[data-b]').forEach(x=>x.onclick=()=>{b=+x.dataset.b;draw()});
+    const step=(id,get,set,min,max)=>{$('#'+id+'-m').onclick=()=>{set(Math.max(min,get()-1));draw()};$('#'+id+'-p').onclick=()=>{set(Math.min(max,get()+1));draw()}};
+    step('bid',()=>bid,v=>bid=v,1,TOT);
+    for(let i=0;i<N;i++)step('t'+i,()=>tk[i],v=>tk[i]=v,0,TOT);
+    if(e)delBtn(idx);
+    $('#manual').onclick=()=>{if(e&&e.bt){delete e.bt;save()}openRound(idx)};
+    $('#ok').onclick=()=>{
+      if(b===null)return showErr('İhaleyi kim aldı, seç.');
+      if(left!==0)return showErr(`Toplam el ${TOT} olmalı. ${left>0?'Kalan '+left+' el var.':Math.abs(left)+' el fazla girildi.'}`);
+      const v=batakScore({b,bid,tk}), bt={b,bid,tk:[...tk]};
+      if(e){e.v=v;e.bt=bt}else S.entries.push({t:'r',v,bt});
+      save();closeM();renderGame();if(!e){window.scrollTo({top:document.body.scrollHeight});checkLimit()}
+    };
+  };
+  draw();
+}
+function stepper(id,v){return `<span class="stp"><button id="${id}-m" aria-label="Azalt">−</button><b>${v}</b><button id="${id}-p" aria-label="Arttır">+</button></span>`}
+
+
+/* ---------- DÜZ OKEY ---------- */
+// Herkes başlangıç puanıyla başlar. Eli bitiren hariç herkes bitiş şekline göre puan kaybeder.
+// Eşli oyunda bitirenin eşi de puan kaybetmez. Gösterge yapan varsa diğerleri 1 puan daha kaybeder.
+const DZ={n:{t:'Normal bitti',s:'bitirdi',a:2},o:{t:'Okeyle bitti',s:'okeyle',a:4},c:{t:'Çifte bitti',s:'çifte',a:4},co:{t:'Çifte okeyle',s:'çifte okey',a:8}};
+const mate=i=>S.mode==='esli'&&P()===4?TEAMS.find(t=>t.includes(i)).find(x=>x!==i):-1;
+function duzScore(d){return IDX().map(i=>{let v=0;
+  if(d.f!=null&&i!==d.f&&i!==mate(d.f))v-=DZ[d.how].a;
+  if(d.gs!=null&&i!==d.gs&&i!==mate(d.gs))v-=1;return v})}
+function openDuz(idx){
+  const e=idx!=null?S.entries[idx]:null;
+  let f=e&&e.dz?e.dz.f:null, how=e&&e.dz?e.dz.how:'n', gs=e&&e.dz?e.dz.gs:null, first=true;
+  const title=e?'Tur '+roundNo(idx)+' düzenle':'Tur '+(roundCount()+1);
+  const draw=()=>{
+    const v=duzScore({f,how,gs});
+    modal(`${head(title)}
+      <div class="label">Eli kim bitirdi?</div>
+      <div class="pick">${S.names.map((n,i)=>`<button data-f="${i}" aria-pressed="${f===i}"><span class="pchip p${i}">${esc(n)}</span></button>`).join('')}</div>
+      <div class="label">Nasıl bitti?</div>
+      <div class="pick">${Object.entries(DZ).map(([k,d])=>`<button data-h="${k}" aria-pressed="${how===k}">${d.t} <small>−${d.a}</small></button>`).join('')}</div>
+      <div class="label">Gösterge yapan var mı? <span class="left">isteğe bağlı</span></div>
+      <div class="pick">${S.names.map((n,i)=>`<button data-gs="${i}" aria-pressed="${gs===i}">${esc(n)}</button>`).join('')}</div>
+      ${f!==null||gs!==null?`<div class="whol">${S.names.map((n,i)=>`<div><span class="pchip p${i}">${esc(n)}</span><b class="${v[i]<0?'negc':''}">${v[i]||0}</b></div>`).join('')}</div>`:''}
+      <p class="err" id="err" hidden></p>
+      <button class="btn primary full" id="ok">Kaydet</button>
+      <button class="btn full" id="manual">Puanları elle gir</button>
+      ${e?'<button class="btn full" id="del" style="color:var(--pen)">Bu turu sil</button>':''}`,!first);first=false;
+    document.querySelectorAll('[data-f]').forEach(x=>x.onclick=()=>{f=+x.dataset.f;draw()});
+    document.querySelectorAll('[data-h]').forEach(x=>x.onclick=()=>{how=x.dataset.h;draw()});
+    document.querySelectorAll('[data-gs]').forEach(x=>x.onclick=()=>{gs=gs===+x.dataset.gs?null:+x.dataset.gs;draw()});
+    if(e)delBtn(idx);
+    $('#manual').onclick=()=>{if(e&&e.dz){delete e.dz;save()}openRound(idx)};
+    $('#ok').onclick=()=>{
+      if(f===null&&gs===null)return showErr('Eli kimin bitirdiğini seç.');
+      const dz={f,how,gs},val=duzScore(dz);
+      if(e){e.v=val;e.dz=dz}else S.entries.push({t:'r',v:val,dz});
+      save();closeM();renderGame();if(!e){window.scrollTo({top:document.body.scrollHeight});checkLimit()}
+    };
+  };
+  draw();
+}
+
+/* ---------- BLÖF ---------- */
+function openBlof(idx){
+  const e=idx!=null?S.entries[idx]:null;
+  const title=e?'Tur '+roundNo(idx)+' düzenle':'Tur '+(roundCount()+1);
+  modal(`${head(title)}
+    <div class="label">Bu eli kim kazandı?</div>
+    <div class="pick big">${S.names.map((n,i)=>`<button data-w="${i}" aria-pressed="${!!(e&&e.bl&&e.bl.w===i)}"><span class="pchip p${i}">${esc(n)}</span></button>`).join('')}</div>
+    <p class="hint">Kazanana 1 puan yazılır. Kartını ilk bitiren eli kazanır.</p>
+    <button class="btn full" id="manual">Puanları elle gir</button>
+    ${e?'<button class="btn full" id="del" style="color:var(--pen)">Bu turu sil</button>':''}`);
+  document.querySelectorAll('[data-w]').forEach(x=>x.onclick=()=>{const w=+x.dataset.w,v=IDX().map(i=>i===w?1:0);
+    if(e){e.v=v;e.bl={w}}else S.entries.push({t:'r',v,bl:{w}});
+    save();closeM();renderGame();if(!e){window.scrollTo({top:document.body.scrollHeight});checkLimit()}});
+  if(e)delBtn(idx);
+  $('#manual').onclick=()=>{if(e&&e.bl){delete e.bl;save()}openRound(idx)};
+}
+
+/* ---------- ZAR ---------- */
+const PIPS={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+const die=(n,cls='')=>`<span class="die ${cls}">${[1,2,3,4,5,6,7,8,9].map(p=>`<i${PIPS[n].includes(p)?' class="on"':''}></i>`).join('')}</span>`;
+const rnd=()=>{try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%6+1}catch(e){return Math.floor(Math.random()*6)+1}};
+let diceN=2;
+function openDice(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  modal(`${head('Zar at')}
+    <div class="seg" role="group"><button data-d="1" aria-pressed="${diceN===1}">1 zar</button><button data-d="2" aria-pressed="${diceN===2}">2 zar</button></div>
+    <div class="dice" id="dz">${Array(diceN).fill(0).map(()=>die(6)).join('')}</div>
+    <p class="dsum" id="ds">Atmak için bas</p>
+    <button class="btn primary full ib" id="roll">${ICON.dice}<span>Zar at</span></button>
+    <div class="label" style="margin-top:4px">Kim başlasın?</div>
+    <button class="btn full" id="who">Herkes için at</button>
+    <div id="wl"></div>`);
+  document.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{diceN=+x.dataset.d;openDice()});
+  const anim=(fin)=>{if(reduce)return fin();let k=0;const t=setInterval(()=>{
+      $('#dz').innerHTML=Array(diceN).fill(0).map(()=>die(rnd(),'spin')).join('');
+      if(++k>=9){clearInterval(t);fin()}},70)};
+  $('#roll').onclick=()=>{$('#roll').disabled=true;anim(()=>{
+      const r=Array(diceN).fill(0).map(rnd);
+      $('#dz').innerHTML=r.map(n=>die(n,'land')).join('');
+      $('#ds').innerHTML=diceN===2?`<b>${r[0]+r[1]}</b>${r[0]===r[1]?' · Çift!':''}`:`<b>${r[0]}</b>`;
+      try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
+      $('#roll').disabled=false})};
+  $('#who').onclick=()=>{
+    let pool=IDX(), rounds=[];
+    // en yüksek atan başlar; eşitlik olursa eşitler tekrar atar
+    while(pool.length>1&&rounds.length<6){const r=pool.map(i=>({i,v:rnd()+(diceN===2?rnd():0)}));rounds.push(r);
+      const m=Math.max(...r.map(x=>x.v));pool=r.filter(x=>x.v===m).map(x=>x.i)}
+    const last=rounds[0];
+    $('#wl').innerHTML=`<div class="whol">${last.map(x=>`<div class="${pool.includes(x.i)&&rounds.length===1?'win':''}"><span class="pchip p${x.i}">${esc(S.names[x.i])}</span><b>${x.v}</b></div>`).join('')}</div>
+      ${rounds.length>1?`<p class="hint" style="text-align:center">Eşitlik oldu, eşitler tekrar attı.</p>`:''}
+      <p class="whowin"><b>${esc(S.names[pool[0]])}</b> başlıyor</p>`;
+  };
 }
 
 /* ---------- GEÇMİŞ ---------- */
 const AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const _t=0;
 const tarih=d=>{const x=new Date(d);return `${x.getDate()} ${AY[x.getMonth()]} ${x.getFullYear()}`};
 function renderHistory(){
   const h=loadH();
-  $('#app').innerHTML=`<div class="wrap">
-    <button class="icon-btn" id="back">← Geri</button>
-    <h1 style="margin-top:14px">Geçmiş oyunlar</h1>
-    <p class="sub">${h.length?h.length+' oyun kayıtlı':'Henüz bitmiş oyun yok.'}</p>
-    ${h.length?`<div class="hist">${h.map((g,i)=>{const sm=summary(g);return `<button data-h="${i}">
+  $('#app').innerHTML=`<header class="hero"><div class="hero-in">
+      <button class="ghost" id="back">← Geri</button>
+      <p class="hero-t">Geçmiş oyunlar</p>
+      <p class="hero-s">${h.length?h.length+' oyun kayıtlı':'Henüz bitmiş oyun yok.'}</p></div></header>
+    <div class="wrap">
+    ${h.length?`<div class="hist lift-list">${h.map((g,i)=>{const sm=summary(g);return `<button data-h="${i}">
       <span class="hd">${tarih(g.d)} · ${GAMES[g.game].n}</span>
-      <span class="hw">🏆 ${esc(sm.winners)}</span>
-      <span class="hd">${sm.rounds} tur · ${g.names.map(esc).join(', ')}</span></button>`}).join('')}</div>`
-    :`<div class="sheet"><div class="empty"><b>Liste boş</b>Bir oyunu <b style="display:inline">Oyunu bitir</b> ile kapatıp yenisine geçince burada görünür.</div></div>`}
+      <span class="hw">${ICON.trophy}${esc(sm.winners)}</span>
+      <span class="hd">${sm.rounds}${g.limit?' / '+g.limit:''} tur · ${g.names.map(esc).join(', ')}</span></button>`}).join('')}</div>`
+    :`<div class="sheet lift"><div class="empty"><b>Liste boş</b>Bir oyunu <b style="display:inline">Oyunu bitir</b> ile kapatıp yenisine geçince burada görünür.</div></div>`}
   </div>`;
   $('#back').onclick=renderPick;
   document.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>openPast(+b.dataset.h));
@@ -414,9 +698,13 @@ function renderHistory(){
 function openPast(i){
   const g=loadH()[i], sm=summary(g);
   modal(`${head(GAMES[g.game].n+' · '+tarih(g.d))}${sm.html}
+    <button class="btn primary full" id="cont">Bu oyuna devam et</button>
     <button class="btn full" id="copy">Sonucu kopyala</button>
     <button class="btn full" id="del" style="color:var(--pen)">Bu oyunu geçmişten sil</button>`);
   copyBtn(sm.txt);
+  $('#cont').onclick=()=>{const h=loadH();h.splice(i,1);saveH(h);
+    S={started:true,game:g.game,mode:g.mode||'tekli',limit:g.limit||0,start:g.start||0,names:[...g.names],entries:g.entries};
+    showTotals=false;save();closeM();render()};
   let armed=false;const b=$('#del');
   b.onclick=()=>{if(!armed){armed=true;b.textContent='Silmek için tekrar bas';return}
     const h=loadH();h.splice(i,1);saveH(h);closeM();renderHistory()};
