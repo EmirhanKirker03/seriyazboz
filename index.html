@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Okey (101, 51) ve Pişti için puan tutma uygulaması. Kâğıt kalem gerekmez.">
+<meta name="theme-color" content="#1e5a42">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Seri Yazboz">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif}[hidden]{display:none!important}</style>
+<title>Seri Yazboz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: masa keçesi üzerinde taş rengi bir puan kağıdı; altta sabit işlem çubuğu */
+:root{
+  --bg:#e7ece6; --paper:#fbfaf5; --ink:#1b2420; --muted:#66716a; --line:#d8ddd4;
+  --felt:#1e5a42; --felt-ink:#ffffff;
+  --t-red:#c4352b; --t-blue:#2456a3; --t-black:#1b2420; --t-amber:#b67a06;
+  --pen:#c4352b; --bonus:#1e7a4f; --shade:rgba(15,25,20,.45);
+  --f-num:"Rubik",system-ui,sans-serif; --f-body:"Figtree",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1814; --paper:#17231d; --ink:#e7ede6; --muted:#93a39a; --line:#2a3a32;
+  --felt:#2f8a63; --felt-ink:#ffffff;
+  --t-red:#f0675c; --t-blue:#78a5f2; --t-black:#e7ede6; --t-amber:#e7ad3a;
+  --pen:#f0675c; --bonus:#4cc48b; --shade:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1814; --paper:#17231d; --ink:#e7ede6; --muted:#93a39a; --line:#2a3a32;
+  --felt:#2f8a63; --felt-ink:#ffffff;
+  --t-red:#f0675c; --t-blue:#78a5f2; --t-black:#e7ede6; --t-amber:#e7ad3a;
+  --pen:#f0675c; --bonus:#4cc48b; --shade:rgba(0,0,0,.6); color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 160px}
+h1{font-family:var(--f-num);font-weight:800;font-size:28px;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-offset:2px}
+.btn{border:0;border-radius:12px;padding:14px 16px;font-weight:700;font-size:16px;background:var(--paper);border:1px solid var(--line)}
+.btn.primary{background:var(--felt);color:var(--felt-ink);border-color:var(--felt)}
+.btn.danger{background:var(--pen);color:#fff;border-color:var(--pen)}
+.btn.full{width:100%}
+
+/* kurulum */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:16px;margin-top:20px}
+.label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--paper);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.names{display:grid;gap:10px}
+.nrow{display:flex;align-items:center;gap:10px}
+.tile{flex:none;width:34px;height:42px;border-radius:7px;background:var(--paper);border:1px solid var(--line);box-shadow:0 2px 0 var(--line);display:grid;place-items:center;font-family:var(--f-num);font-weight:800;font-size:18px}
+.nrow input,.field input{flex:1;min-width:0;font:inherit;font-size:17px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.c0{color:var(--t-red)}.c1{color:var(--t-blue)}.c2{color:var(--t-black)}.c3{color:var(--t-amber)}
+.err{color:var(--pen);font-size:14px;margin:0;font-weight:600}
+
+/* puan kağıdı */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.icon-btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:600}
+.sheet{margin-top:16px;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.grid{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed}
+.grid th{font-weight:700;font-size:14px;padding:12px 4px 10px;border-bottom:2px solid var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grid th:first-child,.grid td:first-child{width:44px;color:var(--muted);font-size:13px;text-align:center}
+.grid td{text-align:center;padding:11px 4px;border-bottom:1px solid var(--line);font-family:var(--f-num);font-weight:500;font-size:18px}
+.grid tr.row{cursor:pointer}
+.grid tr.row:active td{background:var(--bg)}
+.grid tr.pen td{font-size:15px;padding:7px 4px;background:color-mix(in srgb,var(--bg) 55%,var(--paper))}
+.chip{display:inline-block;font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:6px}
+.chip.ceza{background:color-mix(in srgb,var(--pen) 16%,transparent);color:var(--pen)}
+.chip.baraj{background:color-mix(in srgb,var(--bonus) 16%,transparent);color:var(--bonus)}
+.v-pen{color:var(--pen);font-weight:700}.v-bon{color:var(--bonus);font-weight:700}
+.note{display:block;font-family:var(--f-body);font-size:11px;color:var(--muted);font-weight:500;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{padding:32px 20px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+
+/* alt çubuk */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--paper);border-top:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.dock-in{max-width:560px;margin:0 auto;display:grid;gap:10px}
+.actions{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px}
+.actions .btn{padding:14px 8px;font-size:15px}
+.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tot{background:var(--bg);border-radius:12px;padding:10px 6px;text-align:center;min-width:0}
+.tot .n{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tot .s{font-family:var(--f-num);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.team{background:var(--felt);color:var(--felt-ink);border-radius:12px;padding:10px;text-align:center}
+.team .n{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team .s{font-family:var(--f-num);font-weight:800;font-size:24px;font-variant-numeric:tabular-nums}
+
+/* alt pencere */
+.overlay{position:fixed;inset:0;z-index:20;background:var(--shade);display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--paper);width:100%;max-width:560px;max-height:92%;overflow:auto;border-radius:20px 20px 0 0;
+  padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-top:18px;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:16px}
+.modal h2{font-family:var(--f-num);font-weight:700;font-size:20px;margin:0}
+.mhead{display:flex;justify-content:space-between;align-items:center}
+.close{border:0;background:var(--bg);border-radius:999px;width:36px;height:36px;font-size:18px}
+.prow{display:flex;align-items:center;gap:8px}
+.prow .pn{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow input{width:96px;font-family:var(--f-num);font-size:20px;text-align:center;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.sign{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-family:var(--f-num);font-size:20px;font-weight:700}
+.sign[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pick button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick button[aria-pressed="true"]{border-color:var(--ink);background:var(--paper);box-shadow:inset 0 0 0 1px var(--ink)}
+.presets{display:flex;flex-wrap:wrap;gap:8px}
+.presets button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:9px 16px;font-family:var(--f-num);font-weight:700;font-size:16px}
+.presets button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.field{display:grid;gap:6px}
+.field input{flex:none;width:100%}
+.preview{font-size:15px;background:var(--bg);border-radius:10px;padding:12px;text-align:center}
+.pick.big button{padding:20px 8px;font-size:18px;font-weight:700}
+.bigs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bigs button{padding:16px 8px;border-radius:14px;border:1px solid var(--line);background:var(--bg);font-family:var(--f-num);font-weight:800;font-size:26px}
+.bigs small{display:block;font-family:var(--f-body);font-size:13px;font-weight:600;margin-top:2px}
+.bigs .pen{color:var(--pen)}.bigs .bon{color:var(--bonus)}
+.grid th:first-child,.grid td:first-child{width:52px}
+.actions.two-col{grid-template-columns:1.3fr 1fr}
+.games{display:grid;gap:12px;margin-top:20px}
+.games button{display:grid;gap:4px;text-align:left;padding:22px 20px;border-radius:16px;border:1px solid var(--line);background:var(--paper);box-shadow:0 3px 0 var(--line)}
+.games button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.games .gn{font-family:var(--f-num);font-weight:800;font-size:26px}
+.games .gd{color:var(--muted);font-size:14px}
+.tot{position:relative}
+.tot .rk{font-size:11px;font-weight:700;color:var(--muted);min-height:14px}
+.tot.lead{background:color-mix(in srgb,var(--felt) 16%,var(--bg));box-shadow:inset 0 0 0 2px var(--felt)}
+.tot.lead .rk{color:var(--felt)}
+.podium{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.podium li{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:12px;padding:12px 14px}
+.podium li.win{background:var(--felt);color:var(--felt-ink)}
+.podium li.win .pn{color:var(--felt-ink)}
+.podium .pl{font-family:var(--f-num);font-weight:800;font-size:22px;width:24px;text-align:center}
+.podium .pn{flex:1;min-width:0;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.podium .pv{font-family:var(--f-num);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+.copybox{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);box-sizing:border-box}
+.histlink{margin-top:18px;width:100%;border:0;background:transparent;color:var(--felt);font-weight:700;font-size:16px;padding:12px;text-decoration:underline;text-underline-offset:4px}
+.hist{display:grid;gap:10px;margin-top:18px}
+.hist button{display:grid;gap:4px;text-align:left;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--paper)}
+.hist .hd{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist .hw{font-family:var(--f-num);font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.install{display:flex;gap:10px;align-items:flex-start;margin-top:16px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--felt) 14%,var(--paper));border:1px solid color-mix(in srgb,var(--felt) 35%,transparent);font-size:14px;line-height:1.4}
+.install span{flex:1;min-width:0}
+.install button{border:0;background:transparent;font-size:16px;padding:0 4px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (prefers-reduced-motion:no-preference){.modal{animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
+</style>
+
+</head>
+<body>
+<div id="app"></div>
+<div id="layer"></div>
+
+<script>
+const COLORS=['c0','c1','c2','c3'];
+const KEY='okey-puan-v1';
+let S=load()||fresh();
+let showTotals=false;
+if(S.started&&!S.game)S.game='101';
+const GAMES={'101':{n:'101 Okey',d:'Ceza ve baraj ile'},'51':{n:'51 Okey',d:'Ceza ve baraj ile'},'pisti':{n:'Pişti',d:'Sadece el puanları'}};
+
+function fresh(){return{started:false,mode:'tekli',names:['','','',''],entries:[]}}
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null}catch(e){return null}}
+const HKEY='seri-yazboz-gecmis';
+function loadH(){try{return JSON.parse(localStorage.getItem(HKEY))||[]}catch(e){return[]}}
+function saveH(h){try{localStorage.setItem(HKEY,JSON.stringify(h.slice(0,200)))}catch(e){}}
+function archive(){if(!S.entries.length)return;const h=loadH();
+  h.unshift({d:Date.now(),game:S.game,mode:S.mode,names:[...S.names],entries:JSON.parse(JSON.stringify(S.entries))});saveH(h)}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>(n>0?'+':'')+n;
+const $=s=>document.querySelector(s);
+const P=()=>S.names.length;
+const IDX=()=>[...Array(P()).keys()];
+const lowWins=(g=S.game)=>g!=='pisti';
+function ranks(arr,g){const lw=lowWins(g);const o=arr.map((v,i)=>({v,i})).sort((a,b)=>lw?a.v-b.v:b.v-a.v);
+  const r=[];o.forEach((x,k)=>{r[x.i]=(k&&x.v===o[k-1].v)?r[o[k-1].i]:k+1});return {order:o,r}}
+
+function totals(names=S.names,entries=S.entries){
+  const t=Array(names.length).fill(0);
+  for(const e of entries){ if(e.t==='r') e.v.forEach((x,i)=>t[i]+=x); else t[e.p]+=e.v; }
+  return t;
+}
+// Eşli: karşılıklı oturanlar eş (1-3 ve 2-4)
+const TEAMS=[[0,2],[1,3]];
+
+/* ---------- KURULUM ---------- */
+function showInstall(){
+  try{if(window.self!==window.top)return false}catch(e){return false}
+  const standalone=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+  const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  let seen=false;try{seen=localStorage.getItem('seri-yazboz-ipucu')==='1'}catch(e){}
+  return mobile&&!standalone&&!seen;
+}
+function renderPick(){
+  $('#app').innerHTML=`<div class="wrap">
+    <h1>Seri Yazboz</h1>
+    <p class="sub">Hangi oyunu oynuyorsunuz?</p>
+    ${showInstall()?`<div class="install" id="inst"><span>Kayıtların kaybolmasın diye <b>Paylaş → Ana Ekrana Ekle</b> ile uygulamayı ana ekrana ekle.</span><button id="instx" aria-label="Kapat">✕</button></div>`:''}
+    <div class="games">${['101','51','pisti'].map(k=>[k,GAMES[k]]).map(([k,g])=>`<button data-g="${k}"><span class="gn">${g.n}</span><span class="gd">${g.d}</span></button>`).join('')}</div>
+    <button class="histlink" id="hist">Geçmiş oyunlar${loadH().length?' ('+loadH().length+')':''}</button></div>`;
+  $('#hist').onclick=renderHistory;
+  if($('#instx'))$('#instx').onclick=()=>{try{localStorage.setItem('seri-yazboz-ipucu','1')}catch(e){}$('#inst').remove()};
+  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.game=b.dataset.g;if(S.game!=='pisti')S.names=[...S.names,'','',''].slice(0,4);if(S.game!=='pisti'&&S.mode!=='esli')S.mode='tekli';save();renderSetup()});
+}
+function renderSetup(){
+  if(!S.game)return renderPick();
+  $('#app').innerHTML=`<div class="wrap">
+    <button class="icon-btn" id="back">← Oyun değiştir</button>
+    <h1 style="margin-top:14px">${GAMES[S.game].n}</h1>
+    <p class="sub">Oyuncuların adını yaz, başlayalım.</p>
+    <div class="card">
+      ${S.game==='pisti'?`<div class="label">Kaç kişi?</div>
+      <div class="seg" role="group">
+        <button id="c2" aria-pressed="${P()===2}">2 kişi</button>
+        <button id="c4" aria-pressed="${P()===4}">4 kişi</button>
+      </div>`:''}
+      ${P()===4?`<div class="label">Oyun tipi</div>
+      <div class="seg" role="group">
+        <button id="m-tekli" aria-pressed="${S.mode==='tekli'}">Tekli</button>
+        <button id="m-esli" aria-pressed="${S.mode==='esli'}">Eşli</button>
+      </div>`:''}
+      <div class="label">Oyuncular (oturma sırasıyla)</div>
+      <div class="names">
+        ${S.names.map((n,i)=>`<label class="nrow"><span class="tile ${COLORS[i]}">${i+1}</span>
+          <input id="n${i}" value="${esc(n)}" placeholder="${i+1}. oyuncunun adı" maxlength="14" autocomplete="off"></label>`).join('')}
+      </div>
+      ${S.mode==='esli'&&P()===4?`<p class="hint">Karşılıklı oturanlar eş olur: <b>1 ve 3</b> bir takım, <b>2 ve 4</b> bir takım.</p>`:''}
+      <p class="err" id="err" hidden></p>
+      <button class="btn primary full" id="start">Oyunu başlat</button>
+    </div></div>`;
+  const keep=()=>S.names=S.names.map((_,i)=>$('#n'+i).value);
+  $('#back').onclick=()=>{keep();if(S.game!=='pisti')S.names=[...S.names,'','',''].slice(0,4);S.game=null;save();renderPick()};
+  const setN=n=>{keep();S.names=[...S.names,'','',''].slice(0,n);if(n===2)S.mode='tekli';renderSetup()};
+  if($('#c2')){$('#c2').onclick=()=>setN(2);$('#c4').onclick=()=>setN(4)}
+  if($('#m-tekli')){$('#m-tekli').onclick=()=>{keep();S.mode='tekli';renderSetup()};
+  $('#m-esli').onclick=()=>{keep();S.mode='esli';renderSetup()}}
+  $('#start').onclick=()=>{
+    keep(); const n=S.names.map(x=>x.trim());
+    if(n.some(x=>!x)){const e=$('#err');e.textContent='Tüm oyuncuların adını yaz.';e.hidden=false;return}
+    S.names=n;S.started=true;S.entries=[];save();render();
+  };
+}
+
+/* ---------- OYUN ---------- */
+function renderGame(){
+  let round=0, rows='';
+  S.entries.forEach((e,idx)=>{
+    if(e.t==='r'){round++;
+      rows+=`<tr class="row" data-i="${idx}"><td>${round}</td>${e.v.map(x=>`<td>${x}</td>`).join('')}</tr>`;
+    }else{
+      const cells=IDX().map(i=>i===e.p
+        ?`<td><span class="${e.v>0?'v-pen':'v-bon'}">${fmt(e.v)}</span>${e.note?`<span class="note">${esc(e.note)}</span>`:''}</td>`:'<td></td>').join('');
+      rows+=`<tr class="row pen" data-i="${idx}"><td><span class="chip ${e.v>0?'ceza':'baraj'}">${e.v>0?'Ceza':'Baraj'}</span></td>${cells}</tr>`;
+    }
+  });
+  const t=totals(), rk=ranks(t);/*live*/
+  $('#app').innerHTML=`<div class="wrap">
+    <div class="top"><div><h1>${GAMES[S.game].n}</h1>
+      <p class="sub">${S.mode==='esli'?'Eşli':'Tekli'} · ${round} tur oynandı</p></div>
+      <button class="icon-btn" id="newgame">Oyunu bitir</button></div>
+    <div class="sheet">
+      <table class="grid"><thead><tr><th>Tur</th>${S.names.map((n,i)=>`<th class="${COLORS[i]}">${esc(n)}</th>`).join('')}</tr></thead>
+      <tbody>${rows}</tbody></table>
+      ${S.entries.length?'':`<div class="empty"><b>Henüz tur yok</b>İlk el bitince aşağıdaki <b style="display:inline">Tur ekle</b> ile puanları gir.</div>`}
+    </div>
+    ${S.entries.length?'<p class="hint" style="margin-top:10px;text-align:center">Düzeltmek için bir satıra dokun.</p>':''}
+  </div>
+  <div class="dock"><div class="dock-in">
+    <div id="totbox" ${showTotals?'':'hidden'}>
+      ${S.mode==='esli'?`<div class="teams" style="margin-bottom:6px">${TEAMS.map(([a,b])=>`<div class="team"><div class="n">${esc(S.names[a])} + ${esc(S.names[b])}</div><div class="s">${t[a]+t[b]}</div></div>`).join('')}</div>`:''}
+      <div class="totals" style="grid-template-columns:repeat(${P()},1fr)">${S.names.map((n,i)=>`<div class="tot${rk.r[i]===1&&S.entries.length?' lead':''}"><div class="n ${COLORS[i]}">${esc(n)}</div><div class="s">${t[i]}</div><div class="rk">${S.entries.length?rk.r[i]+'.':''}</div></div>`).join('')}</div>
+    </div>
+    <div class="actions${S.game==='pisti'?' two-col':''}">
+      <button class="btn primary" id="addr">Tur ekle</button>
+      ${S.game==='pisti'?'':'<button class="btn" id="addp">Ceza / Baraj</button>'}
+      <button class="btn" id="tog" aria-pressed="${showTotals}">${showTotals?'Gizle':'Toplam'}</button>
+    </div></div></div>`;
+  $('#addr').onclick=()=>openRound();
+  if($('#addp'))$('#addp').onclick=()=>openPenalty();
+  $('#tog').onclick=()=>{showTotals=!showTotals;renderGame()};
+  $('#newgame').onclick=openFinish;
+  keepAwake();
+  document.querySelectorAll('tr.row').forEach(r=>r.onclick=()=>openRow(+r.dataset.i));
+}
+
+/* ---------- PENCERELER ---------- */
+function modal(html){
+  $('#layer').innerHTML=`<div class="overlay" id="ov"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;
+  $('#ov').onclick=e=>{if(e.target.id==='ov')closeM()};
+  const c=$('#x'); if(c)c.onclick=closeM;
+}
+function closeM(){$('#layer').innerHTML=''}
+const head=t=>`<div class="mhead"><h2>${t}</h2><button class="close" id="x" aria-label="Kapat">✕</button></div>`;
+
+function roundNo(idx){let n=0;for(let j=0;j<=idx;j++)if(S.entries[j].t==='r')n++;return n}
+function delBtn(idx){
+  const b=$('#del');let armed=false;
+  b.onclick=()=>{if(!armed){armed=true;b.textContent='Silmek için tekrar bas';return}
+    S.entries.splice(idx,1);save();closeM();renderGame()};
+}
+
+function openRound(idx){
+  const e=idx!=null?S.entries[idx]:null;
+  const neg=IDX().map(i=>e?e.v[i]<0:false);
+  const title=e?'Tur '+roundNo(idx)+' düzenle':'Tur '+(S.entries.filter(x=>x.t==='r').length+1);
+  modal(`${head(title)}
+    ${S.names.map((n,i)=>`<div class="prow"><span class="pn ${COLORS[i]}">${esc(n)}</span>
+      <button class="sign" id="s${i}" aria-pressed="${neg[i]}" aria-label="Eksi yap">−</button>
+      <input id="r${i}" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${e&&e.v[i]?Math.abs(e.v[i]):''}" autocomplete="off"></div>`).join('')}
+    <p class="err" id="err" hidden></p>
+    <button class="btn primary full" id="ok">Kaydet</button>
+    ${e?'<button class="btn full" id="del" style="color:var(--pen)">Bu turu sil</button>':''}`);
+  for(let i=0;i<P();i++){
+    $('#s'+i).onclick=()=>{neg[i]=!neg[i];$('#s'+i).setAttribute('aria-pressed',neg[i])};
+    $('#r'+i).addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();(i<P()-1?$('#r'+(i+1)):$('#ok')).focus()}});
+  }
+  if(!e)setTimeout(()=>$('#r0').focus(),50); else delBtn(idx);
+  $('#ok').onclick=()=>{
+    const v=IDX().map(i=>{const r=$('#r'+i).value.replace(/[^0-9]/g,'');const n=r?parseInt(r,10):0;return neg[i]?-n:n});
+    if(v.every(x=>x===0)){showErr('En az bir oyuncuya puan yaz.');return}
+    if(e)e.v=v; else S.entries.push({t:'r',v});
+    save();closeM();renderGame();
+    if(!e)window.scrollTo({top:document.body.scrollHeight});
+  };
+}
+
+const PRESETS={'101':[51,101,-101],'51':[51,101,-101]};
+function openPenalty(idx){
+  const e=idx!=null?S.entries[idx]:null;
+  if(e)return pickAmount(e.p,idx);
+  modal(`${head('Kime?')}
+    <div class="pick big">${S.names.map((n,i)=>`<button data-p="${i}" class="${COLORS[i]}">${esc(n)}</button>`).join('')}</div>`);
+  document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>pickAmount(+b.dataset.p,null));
+}
+function pickAmount(p,idx){
+  const e=idx!=null?S.entries[idx]:null;
+  let neg=e?e.v<0:false;
+  const put=v=>{if(e)e.v=v; else S.entries.push({t:'p',p,v}); save();closeM();renderGame()};
+  modal(`${head(`<span class="${COLORS[p]}">${esc(S.names[p])}</span>`)}
+    <div class="bigs">${(PRESETS[S.game]||PRESETS['101']).map(v=>`<button data-v="${v}" class="${v>0?'pen':'bon'}">${fmt(v)}<small>${v>0?'Ceza':'Baraj'}</small></button>`).join('')}</div>
+    <div class="prow"><span class="pn" style="color:var(--muted);font-weight:500">Başka puan</span>
+      <button class="sign" id="sg" aria-pressed="${neg}" aria-label="Eksi yap">−</button>
+      <input id="amt" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${e?Math.abs(e.v):''}" autocomplete="off">
+      <button class="btn primary" id="ok" style="padding:12px 16px">${e?'Kaydet':'Ekle'}</button></div>
+    <p class="err" id="err" hidden></p>
+    ${e?'<button class="btn full" id="del" style="color:var(--pen)">Bunu sil</button>':''}`);
+  document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>put(+b.dataset.v));
+  $('#sg').onclick=()=>{neg=!neg;$('#sg').setAttribute('aria-pressed',neg)};
+  $('#ok').onclick=()=>{const r=$('#amt').value.replace(/[^0-9]/g,'');const n=r?parseInt(r,10):0;
+    if(!n){showErr('Bir puan yaz ya da yukarıdan seç.');return} put(neg?-n:n)};
+  if(e)delBtn(idx);
+}
+function showErr(m){const e=$('#err');e.textContent=m;e.hidden=false}
+function openRow(i){S.entries[i].t==='r'?openRound(i):openPenalty(i)}
+
+function summary(g){
+  const t=totals(g.names,g.entries);
+  const teams=g.mode==='esli'&&g.names.length===4;
+  const list=teams?TEAMS.map(([a,b])=>({n:g.names[a]+' + '+g.names[b],v:t[a]+t[b],c:''})):g.names.map((n,i)=>({n,v:t[i],c:COLORS[i]}));
+  const rk=ranks(list.map(x=>x.v),g.game);
+  const rounds=g.entries.filter(e=>e.t==='r').length;
+  const txt=`${GAMES[g.game].n} · ${rounds} tur\n`+rk.order.map(o=>`${rk.r[o.i]}. ${list[o.i].n}: ${list[o.i].v}`).join('\n');
+  const html=`<ol class="podium">${rk.order.map(o=>`<li class="${rk.r[o.i]===1?'win':''}"><span class="pl">${rk.r[o.i]}</span><span class="pn ${list[o.i].c}">${esc(list[o.i].n)}</span><span class="pv">${list[o.i].v}</span></li>`).join('')}</ol>
+    <p class="hint" style="text-align:center">${rounds} tur · ${lowWins(g.game)?'En düşük puan kazanır.':'En yüksek puan kazanır.'}</p>`;
+  const winners=rk.order.filter(o=>rk.r[o.i]===1).map(o=>list[o.i].n).join(', ');
+  return {html,txt,winners,rounds};
+}
+function copyBtn(txt){if($('#copy'))$('#copy').onclick=async()=>{const b=$('#copy');
+  try{await navigator.clipboard.writeText(txt);b.textContent='Kopyalandı ✓'}
+  catch(e){b.outerHTML=`<textarea class="copybox" readonly rows="5">${esc(txt)}</textarea>`;const x=document.querySelector('.copybox');x.focus();x.select()}}}
+
+function openFinish(){
+  const sm=summary(S);
+  modal(`${head('Sonuç')}
+    ${S.entries.length?sm.html+'<button class="btn full" id="copy">Sonucu kopyala</button>':'<p style="margin:0">Henüz puan girilmedi.</p>'}
+    <div class="label" style="margin-top:4px">Yeni oyun</div>
+    ${S.entries.length?'<p class="hint" style="margin:-8px 0 0">Bu oyun geçmişe kaydedilir.</p>':''}
+    <button class="btn primary full" id="same">Aynı oyuncularla başlat</button>
+    <div class="two"><button class="btn" id="diff">Oyuncuları değiştir</button><button class="btn" id="game">Başka oyun</button></div>`);
+  copyBtn(sm.txt);
+  const reset=()=>{archive();S.entries=[];showTotals=false;save();closeM()};
+  $('#same').onclick=()=>{reset();renderGame()};
+  $('#diff').onclick=()=>{reset();S.started=false;save();render()};
+  $('#game').onclick=()=>{reset();S.started=false;S.game=null;S.names=[...S.names,'','',''].slice(0,4);save();render()};
+}
+
+/* ---------- GEÇMİŞ ---------- */
+const AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const tarih=d=>{const x=new Date(d);return `${x.getDate()} ${AY[x.getMonth()]} ${x.getFullYear()}`};
+function renderHistory(){
+  const h=loadH();
+  $('#app').innerHTML=`<div class="wrap">
+    <button class="icon-btn" id="back">← Geri</button>
+    <h1 style="margin-top:14px">Geçmiş oyunlar</h1>
+    <p class="sub">${h.length?h.length+' oyun kayıtlı':'Henüz bitmiş oyun yok.'}</p>
+    ${h.length?`<div class="hist">${h.map((g,i)=>{const sm=summary(g);return `<button data-h="${i}">
+      <span class="hd">${tarih(g.d)} · ${GAMES[g.game].n}</span>
+      <span class="hw">🏆 ${esc(sm.winners)}</span>
+      <span class="hd">${sm.rounds} tur · ${g.names.map(esc).join(', ')}</span></button>`}).join('')}</div>`
+    :`<div class="sheet"><div class="empty"><b>Liste boş</b>Bir oyunu <b style="display:inline">Oyunu bitir</b> ile kapatıp yenisine geçince burada görünür.</div></div>`}
+  </div>`;
+  $('#back').onclick=renderPick;
+  document.querySelectorAll('[data-h]').forEach(b=>b.onclick=()=>openPast(+b.dataset.h));
+}
+function openPast(i){
+  const g=loadH()[i], sm=summary(g);
+  modal(`${head(GAMES[g.game].n+' · '+tarih(g.d))}${sm.html}
+    <button class="btn full" id="copy">Sonucu kopyala</button>
+    <button class="btn full" id="del" style="color:var(--pen)">Bu oyunu geçmişten sil</button>`);
+  copyBtn(sm.txt);
+  let armed=false;const b=$('#del');
+  b.onclick=()=>{if(!armed){armed=true;b.textContent='Silmek için tekrar bas';return}
+    const h=loadH();h.splice(i,1);saveH(h);closeM();renderHistory()};
+}
+
+/* ekran kapanmasın */
+let lock=null;
+async function keepAwake(){try{if(!lock&&navigator.wakeLock&&document.visibilityState==='visible'){lock=await navigator.wakeLock.request('screen');lock.addEventListener('release',()=>lock=null)}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(S.started)keepAwake()});
+
+function render(){S.started?renderGame():renderSetup()}
+render();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body>
+</html>

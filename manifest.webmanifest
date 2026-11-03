@@ -1,0 +1,16 @@
+{
+  "name": "Seri Yazboz",
+  "short_name": "Seri Yazboz",
+  "description": "Okey (101, 51) ve Pişti için puan tutma uygulaması",
+  "lang": "tr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e7ece6",
+  "theme_color": "#1e5a42",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
