@@ -370,8 +370,6 @@ function renderSetup(){
           <input id="n${i}" value="${esc(n)}" placeholder="${i+1}. oyuncunun adı" maxlength="14" autocomplete="off"></label>`).join('')}
       </div>
       ${S.mode==='esli'&&P()===4?`<p class="hint">Karşılıklı oturanlar eş olur: <b>1 ve 3</b> bir takım, <b>2 ve 4</b> bir takım.</p>`:''}
-      ${G.start?`<div class="label">Başlangıç puanı</div>
-      <div class="prow"><span class="pn">Herkes kaç puanla başlasın?</span>${stepper('st',S.start||G.start)}</div>`:''}
       <div class="label">Kaç tur oynanacak?</div>
       <div class="seg" role="group"><button id="l0" aria-pressed="${!S.limit}">Sınırsız</button><button id="l1" aria-pressed="${!!S.limit}">Tur sayısı belirle</button></div>
       ${S.limit?`<div class="prow"><span class="pn">Tur sayısı</span>${stepper('lim',S.limit)}</div>
@@ -393,7 +391,7 @@ function renderSetup(){
   $('#start').onclick=()=>{
     keep(); const n=S.names.map(x=>x.trim());
     if(n.some(x=>!x)){const e=$('#err');e.textContent='Tüm oyuncuların adını yaz.';e.hidden=false;return}
-    S.names=n;S.start=G.start?(S.start||G.start):0;S.started=true;S.entries=[];save();render();
+    S.names=n;S.start=G.start||0;S.started=true;S.entries=[];save();render();
   };
 }
 
