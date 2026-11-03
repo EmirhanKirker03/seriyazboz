@@ -536,7 +536,7 @@ function openRound(idx){
   };
 }
 
-const PRESETS={'101':[51,101,-101],'51':[51,101,-101]};
+const PRESETS={'101':[101,-101],'51':[51,101,-101]};
 function openPenalty(idx){
   const e=idx!=null?S.entries[idx]:null;
   if(e)return pickAmount(e.p,idx);
@@ -549,7 +549,7 @@ function pickAmount(p,idx){
   let neg=e?e.v<0:false;
   const put=v=>{if(e)e.v=v; else S.entries.push({t:'p',p,v}); save();closeM();renderGame()};
   modal(`${head(`<span class="${COLORS[p]}">${esc(S.names[p])}</span>`)}
-    <div class="bigs">${(PRESETS[S.game]||PRESETS['101']).map(v=>`<button data-v="${v}" class="${v>0?'pen':'bon'}">${fmt(v)}<small>${v>0?'Ceza':'Baraj'}</small></button>`).join('')}</div>
+    <div class="bigs" style="grid-template-columns:repeat(${(PRESETS[S.game]||PRESETS['101']).length},1fr)">${(PRESETS[S.game]||PRESETS['101']).map(v=>`<button data-v="${v}" class="${v>0?'pen':'bon'}">${fmt(v)}<small>${v>0?'Ceza':'Baraj'}</small></button>`).join('')}</div>
     <div class="prow"><span class="pn" style="color:var(--muted);font-weight:500">Başka puan</span>
       <button class="sign" id="sg" aria-pressed="${neg}" aria-label="Eksi yap">−</button>
       <input id="amt" inputmode="numeric" pattern="[0-9]*" placeholder="0" value="${e?Math.abs(e.v):''}" autocomplete="off">
