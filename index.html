@@ -393,7 +393,7 @@ function renderPick(){
       <span class="gtxt"><span class="gn">${GAMES[k].n}</span><span class="gd">${GAMES[k].d}</span></span>${art(k)}</button>`).join('')}</div>
     <div class="homebtns"><button class="histlink" id="hist">${ICON.clock}<span>Geçmiş oyunlar</span>${hc?`<b>${hc}</b>`:''}</button></div></div></div>`;
   $('#hist').onclick=renderHistory;
-  $('#hdice').onclick=openDice;
+  $('#hdice').onclick=openDiceTap;
   if($('#instx'))$('#instx').onclick=()=>{try{localStorage.setItem('seri-yazboz-ipucu','1')}catch(e){}$('#inst').remove()};
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.game=b.dataset.g;if(S.mode!=='esli')S.mode='tekli';fitNames();save();renderSetup()});
 }
@@ -484,7 +484,7 @@ function renderGame(){
   if($('#addp'))$('#addp').onclick=()=>openPenalty();
   $('#tog').onclick=()=>{showTotals=!showTotals;renderGame()};
   $('#newgame').onclick=()=>openFinish(false);
-  $('#dice').onclick=openDice;
+  $('#dice').onclick=openDiceTap;
   keepAwake();
   document.querySelectorAll('tr.row').forEach(r=>r.onclick=()=>openRow(+r.dataset.i));
 }
@@ -726,8 +726,10 @@ function openDice(){
   document.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{diceN=+x.dataset.d;openDice()});
   const spin=[[0,0],[0,0]];
   $('#roll').onclick=()=>{
-    const btn=$('#roll');btn.disabled=true;
+    const btn=$('#roll');if(btn.disabled)return;btn.disabled=true;
     const r=Array(diceN).fill(0).map(rnd);
+    // zarlar dönerken, düşerken ve titreşimden sonra 1,5 sn sallama dikkate alınmaz
+    shakeBlock=Date.now()+(reduce?0:2850+(diceN-1)*200)+1500;
     $('#dn').textContent='Zarlar dönüyor…';
     r.forEach((n,k)=>{
       $('#dv'+k).classList.remove('in');$('#dv'+k).textContent='–';
@@ -750,13 +752,27 @@ function openDice(){
     if(motionOn)listenShake();
     if($('#shk'))$('#shk').onclick=async()=>{
       try{const st=await DeviceMotionEvent.requestPermission();
-        if(st==='granted'){motionOn=true;listenShake();$('#shk').remove()}
+        if(st==='granted'){motionOn=true;try{localStorage.setItem(MKEY,'1')}catch(e){}listenShake();$('#shk').remove()}
         else $('#shk').textContent='İzin verilmedi, tuşla atabilirsin'}
       catch(e){$('#shk').textContent='Bu cihazda sallama kullanılamıyor'}};
   }
 }
+/* iPhone/iPad: daha önce izin verildiyse, zar penceresini açan dokunuşta izni sessizce yenile.
+   iOS izin hâlâ geçerliyse soru sormadan "granted" döner, düğme hiç görünmez. */
+const MKEY='seri-yazboz-hareket';
+function openDiceTap(){
+  if(shakeOK()&&needMotionPerm()&&!motionOn){
+    let had=false;try{had=localStorage.getItem(MKEY)==='1'}catch(e){}
+    if(had){try{DeviceMotionEvent.requestPermission().then(st=>{
+      if(st==='granted'){motionOn=true;listenShake();const b=$('#shk');if(b)b.remove()}
+      else{try{localStorage.removeItem(MKEY)}catch(e){}}}).catch(()=>{})}catch(e){}
+      motionOn=true; // düğmeyi gösterme; cevap gelince dinleme başlar
+    }
+  }
+  openDice();
+}
 /* sallama algılama */
-let motionOn=false, shakeH=null;
+let motionOn=false, shakeH=null, shakeBlock=0;
 function shakeOK(){try{if(window.self!==window.top)return false}catch(e){return false}
   // hareket sensörü olan her dokunmatik cihaz: telefon, tablet, iPad, Android, Huawei, Samsung tarayıcısı vb.
   const touch=(navigator.maxTouchPoints||0)>0||'ontouchstart' in window;
@@ -768,11 +784,13 @@ function listenShake(){
   stopShake();let prev=null,last=0,hits=0,hitT=0;
   shakeH=e=>{const a=e.accelerationIncludingGravity||e.acceleration;if(!a)return;
     const v=[a.x||0,a.y||0,a.z||0],now=Date.now();
+    // zar atıldıktan sonraki bekleme süresinde gelen hareketleri unut
+    if(now<shakeBlock){prev=v;hits=0;return}
     // iki ölçüm arasındaki ivme farkı (yön değişimi dahil)
-    if(prev&&Math.hypot(v[0]-prev[0],v[1]-prev[1],v[2]-prev[2])>14){if(now-hitT>700)hits=0;hits++;hitT=now}
+    if(prev&&Math.hypot(v[0]-prev[0],v[1]-prev[1],v[2]-prev[2])>15){if(now-hitT>600)hits=0;hits++;hitT=now}
     prev=v;
-    // kısa sürede iki sert hareket = sallama
-    if(hits>=2&&now-last>1400){const r=$('#roll');if(r&&!r.disabled){last=now;hits=0;r.click()}}};
+    // kısa sürede üç sert hareket = gerçek sallama (tek sarsıntı ya da titreşim saymaz)
+    if(hits>=3&&now-last>1500){const r=$('#roll');if(r&&!r.disabled){last=now;hits=0;r.click()}}};
   window.addEventListener('devicemotion',shakeH);
 }
 function stopShake(){if(shakeH){window.removeEventListener('devicemotion',shakeH);shakeH=null}}
