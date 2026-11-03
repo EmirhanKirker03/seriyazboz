@@ -210,15 +210,6 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 .pts.neg{color:var(--pen)}
 .label .left{float:right;letter-spacing:0;text-transform:none;font-size:13px}
 .left.ok{color:var(--bonus)}.left.bad{color:var(--pen)}
-.dice{display:flex;justify-content:center;gap:18px;padding:12px 0 4px}
-.die{width:84px;height:84px;border-radius:18px;background:linear-gradient(160deg,#fbf6ea,#e5dcc8);box-shadow:0 6px 0 #b9ab90,0 12px 22px -10px rgba(0,0,0,.45);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:12px;gap:2px}
-.die i{display:block;border-radius:50%;margin:auto;width:15px;height:15px}
-.die i.on{background:#1b2420}
-.die.spin{transform:rotate(calc(var(--r,1)*12deg))}
-.die.spin:nth-child(2){transform:rotate(-14deg)}
-@media (prefers-reduced-motion:no-preference){.die.land{animation:land .35s cubic-bezier(.3,1.6,.5,1)}@keyframes land{from{transform:scale(.7) rotate(-20deg)}}}
-.dsum{text-align:center;margin:0;color:var(--muted);font-size:15px}
-.dsum b{font-family:var(--f-num);font-size:34px;color:var(--ink);display:block}
 .whol{display:grid;gap:6px}
 .whol div{display:flex;justify-content:space-between;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px}
 .whol b{font-family:var(--f-num);font-size:20px}
@@ -230,6 +221,30 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--felt);outline-o
 .tagline span{height:1px;width:22px;background:linear-gradient(90deg,transparent,var(--brass))}.tagline span:last-child{transform:scaleX(-1)}
 .pick button small{opacity:.7;font-weight:700;margin-left:2px}
 .negc{color:var(--pen)}
+
+.homebtns{display:grid;gap:10px;margin-top:18px}
+.brandrow{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.homebtns .histlink{margin-top:0}
+/* 3D zar */
+.dice3d{display:flex;justify-content:center;gap:34px;padding:70px 0 0;margin-top:-20px;perspective:700px}
+.dslot{--size:78px;--half:39px;position:relative;width:var(--size);display:grid;justify-items:center;gap:16px}
+.dfloor{position:absolute;top:calc(var(--size) - 6px);width:76%;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);filter:blur(1px)}
+.dthrow{width:var(--size);height:var(--size);transform-style:preserve-3d}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 1.1s cubic-bezier(.18,.72,.24,1)}
+.face{position:absolute;inset:0;border-radius:16px;background:radial-gradient(120% 120% at 30% 25%,#fffaf0,#e4d9c3);box-shadow:inset 0 0 0 1px rgba(120,95,60,.25),inset 0 -6px 10px rgba(120,95,60,.18);
+  display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:11px;backface-visibility:hidden}
+.face i{display:block;margin:auto;width:13px;height:13px;border-radius:50%}
+.face i.on{background:radial-gradient(circle at 35% 35%,#3a2e24,#120d09)}
+.face i.on.ace{width:20px;height:20px;background:radial-gradient(circle at 35% 35%,#e0574a,#9d241b)}
+@keyframes toss{0%{transform:translateY(0)}18%{transform:translateY(-70px) scale(1.06)}55%{transform:translateY(0)}68%{transform:translateY(-22px)}80%{transform:translateY(0)}88%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+@keyframes floor{0%,55%,80%,100%{transform:scale(1);opacity:1}18%{transform:scale(.45);opacity:.35}68%{transform:scale(.8)}}
+.dthrow.toss{animation:toss 1.1s cubic-bezier(.3,.1,.3,1)}
+.dslot:has(.toss) .dfloor{animation:floor 1.1s}
+.dval{font-family:var(--f-num);font-stretch:118%;font-weight:850;font-size:34px;color:var(--brass);min-height:42px;opacity:.35;transition:opacity .25s,transform .25s}
+.dval.in{opacity:1;transform:scale(1.12)}
+.dnote{text-align:center;margin:-4px 0 0;color:var(--muted);font-size:14px;min-height:20px}
+.dnote .dbl{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(216,178,106,.15);color:var(--brass);font-weight:700}
+@media (prefers-reduced-motion:reduce){.cube{transition:none}.dthrow.toss{animation:none}}
 .whowin{text-align:center;font-size:18px;margin:4px 0 0}
 @media (prefers-reduced-motion:no-preference){.modal:not(.still){animation:up .18s ease-out}@keyframes up{from{transform:translateY(24px);opacity:.6}}}
 </style>
@@ -318,7 +333,7 @@ function fitNames(){const c=GAMES[S.game].counts;let n=P();if(!c.includes(n))n=c
 function renderPick(){
   const hc=loadH().length;
   $('#app').innerHTML=`<header class="hero"><div class="hero-in">
-      <div class="brand">${LOGO}<span>Seri Yazboz</span></div>
+      <div class="brandrow"><div class="brand">${LOGO}<span>Seri Yazboz</span></div><button class="ghost" id="hdice">${ICON.dice}<span>Zar at</span></button></div>
       <p class="hero-t">Hangi oyunu oynuyorsunuz?</p>
       <p class="hero-s">Kâğıt kalem gerekmez. Puanları yaz, toplamı uygulama yapsın.</p>
       <p class="tagline"><span></span>Yeni nesil yazboz<span></span></p>
@@ -327,8 +342,9 @@ function renderPick(){
     ${showInstall()?`<div class="install" id="inst"><span>Kayıtların kaybolmasın diye <b>Paylaş → Ana Ekrana Ekle</b> ile uygulamayı ana ekrana ekle.</span><button id="instx" aria-label="Kapat">✕</button></div>`:''}
     <div class="games">${ORDER.map(k=>`<button data-g="${k}" class="g-${k}">
       <span class="gtxt"><span class="gn">${GAMES[k].n}</span><span class="gd">${GAMES[k].d}</span></span>${art(k)}</button>`).join('')}</div>
-    <button class="histlink" id="hist">${ICON.clock}<span>Geçmiş oyunlar</span>${hc?`<b>${hc}</b>`:''}</button></div>`;
+    <div class="homebtns"><button class="histlink" id="hist">${ICON.clock}<span>Geçmiş oyunlar</span>${hc?`<b>${hc}</b>`:''}</button></div></div>`;
   $('#hist').onclick=renderHistory;
+  $('#hdice').onclick=openDice;
   if($('#instx'))$('#instx').onclick=()=>{try{localStorage.setItem('seri-yazboz-ipucu','1')}catch(e){}$('#inst').remove()};
   document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{S.game=b.dataset.g;if(S.mode!=='esli')S.mode='tekli';fitNames();save();renderSetup()});
 }
@@ -645,33 +661,38 @@ const rnd=()=>{try{const a=new Uint32Array(1);crypto.getRandomValues(a);return a
 let diceN=2;
 function openDice(){
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // her yüzün küp üzerindeki yeri ve o yüzü öne getiren dönüş
+  const FACE={1:'rotateY(0deg)',6:'rotateY(180deg)',3:'rotateY(90deg)',4:'rotateY(-90deg)',5:'rotateX(90deg)',2:'rotateX(-90deg)'};
+  const SHOW={1:[0,0],6:[0,180],3:[0,-90],4:[0,90],5:[-90,0],2:[90,0]};
+  const cube=k=>`<div class="dslot"><div class="dfloor"></div><div class="dthrow" id="dt${k}"><div class="cube" id="cb${k}" style="transform:rotateX(-18deg) rotateY(24deg)">
+    ${[1,2,3,4,5,6].map(n=>`<div class="face" style="transform:${FACE[n]} translateZ(var(--half))">${[1,2,3,4,5,6,7,8,9].map(p=>`<i${PIPS[n].includes(p)?` class="on${n===1?' ace':''}"`:''}></i>`).join('')}</div>`).join('')}
+    </div></div><div class="dval" id="dv${k}">–</div></div>`;
   modal(`${head('Zar at')}
     <div class="seg" role="group"><button data-d="1" aria-pressed="${diceN===1}">1 zar</button><button data-d="2" aria-pressed="${diceN===2}">2 zar</button></div>
-    <div class="dice" id="dz">${Array(diceN).fill(0).map(()=>die(6)).join('')}</div>
-    <p class="dsum" id="ds">Atmak için bas</p>
+    <div class="dice3d">${Array(diceN).fill(0).map((_,k)=>cube(k)).join('')}</div>
+    <p class="dnote" id="dn">Atmak için bas</p>
     <button class="btn primary full ib" id="roll">${ICON.dice}<span>Zar at</span></button>
-    <div class="label" style="margin-top:4px">Kim başlasın?</div>
-    <button class="btn full" id="who">Herkes için at</button>
-    <div id="wl"></div>`);
+`);
   document.querySelectorAll('[data-d]').forEach(x=>x.onclick=()=>{diceN=+x.dataset.d;openDice()});
-  const anim=(fin)=>{if(reduce)return fin();let k=0;const t=setInterval(()=>{
-      $('#dz').innerHTML=Array(diceN).fill(0).map(()=>die(rnd(),'spin')).join('');
-      if(++k>=9){clearInterval(t);fin()}},70)};
-  $('#roll').onclick=()=>{$('#roll').disabled=true;anim(()=>{
-      const r=Array(diceN).fill(0).map(rnd);
-      $('#dz').innerHTML=r.map(n=>die(n,'land')).join('');
-      $('#ds').innerHTML=diceN===2?`<b>${r[0]+r[1]}</b>${r[0]===r[1]?' · Çift!':''}`:`<b>${r[0]}</b>`;
-      try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
-      $('#roll').disabled=false})};
-  $('#who').onclick=()=>{
-    let pool=IDX(), rounds=[];
-    // en yüksek atan başlar; eşitlik olursa eşitler tekrar atar
-    while(pool.length>1&&rounds.length<6){const r=pool.map(i=>({i,v:rnd()+(diceN===2?rnd():0)}));rounds.push(r);
-      const m=Math.max(...r.map(x=>x.v));pool=r.filter(x=>x.v===m).map(x=>x.i)}
-    const last=rounds[0];
-    $('#wl').innerHTML=`<div class="whol">${last.map(x=>`<div class="${pool.includes(x.i)&&rounds.length===1?'win':''}"><span class="pchip p${x.i}">${esc(S.names[x.i])}</span><b>${x.v}</b></div>`).join('')}</div>
-      ${rounds.length>1?`<p class="hint" style="text-align:center">Eşitlik oldu, eşitler tekrar attı.</p>`:''}
-      <p class="whowin"><b>${esc(S.names[pool[0]])}</b> başlıyor</p>`;
+  const spin=[[0,0],[0,0]];
+  $('#roll').onclick=()=>{
+    const btn=$('#roll');btn.disabled=true;
+    const r=Array(diceN).fill(0).map(rnd);
+    $('#dn').textContent='Zarlar dönüyor…';
+    r.forEach((n,k)=>{
+      $('#dv'+k).classList.remove('in');$('#dv'+k).textContent='–';
+      spin[k][0]+=360*(2+Math.floor(Math.random()*2));spin[k][1]+=360*(2+Math.floor(Math.random()*2));
+      const [x,y]=SHOW[n],c=$('#cb'+k),t=$('#dt'+k);
+      c.style.transitionDuration=reduce?'0s':(1.05+k*.18)+'s';
+      c.style.transform=`rotateX(${x+spin[k][0]}deg) rotateY(${y+spin[k][1]}deg)`;
+      if(!reduce){t.classList.remove('toss');void t.offsetWidth;t.style.animationDuration=(1.05+k*.18)+'s';t.classList.add('toss')}
+    });
+    setTimeout(()=>{
+      r.forEach((n,k)=>{const v=$('#dv'+k);v.textContent=n;v.classList.add('in')});
+      $('#dn').innerHTML=diceN===2&&r[0]===r[1]?'<span class="dbl">Çift geldi</span>':'&nbsp;';
+      try{navigator.vibrate&&navigator.vibrate([18,40,18])}catch(e){}
+      btn.disabled=false;
+    },reduce?0:1100+(diceN-1)*180);
   };
 }
 
